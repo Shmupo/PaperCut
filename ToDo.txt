@@ -1,7 +1,10 @@
-1. Allow the user to drag the cards around (X FINISHED)
+X Allow the user to drag the cards around X (FINISHED)
 2. Card should only be able to be dragged within the yellow play area
 3. Cards should spawn in the rectangle on the left
 4. Need background music
 5. Sound effects for click on a card
 6. Add effect when player is drawing a card
 	Maybe make the card slightly larger / add a shadow
+7. IMPORTANT : Add some way to optimize the game
+	We cannot have tons of cards constantly wanting to update() or it will slow the game down
+	Create a list of active cards and if a card is in that list, allow it to update
