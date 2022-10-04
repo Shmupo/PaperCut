@@ -1,7 +1,7 @@
-1. Allow the user to drag the cards around
+1. Allow the user to drag the cards around (X FINISHED)
 2. Card should only be able to be dragged within the yellow play area
-3. Card should spawn in the rectangle on the left
+3. Cards should spawn in the rectangle on the left
 4. Need background music
 5. Sound effects for click on a card
-6. Add effect when player is drawing a card?
-	Maybe make the card slightly larger
+6. Add effect when player is drawing a card
+	Maybe make the card slightly larger / add a shadow

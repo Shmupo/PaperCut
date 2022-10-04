@@ -17,11 +17,15 @@ class Game:
         self.background = pg.transform.scale(background, self.size)
         
         card_image = pg.image.load('images/playercard.png')
+        card_image = pg.transform.scale(card_image, (96, 128))
         self.test_card = Card(self, card_image)
 
     # this is the video game loop where everything should be updated
     def play(self):
         while True:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
             self.screen.blit(self.background, (0, 0))
 
             # there is an image that is off-screen but is still loaded and
