@@ -10,7 +10,7 @@ Tasks ##########################################################################
 - Card should only be able to be dragged within the yellow play area and flash the card red
 - Enity cards can target other cards
 	need health/attack values
-- Card Artwork
+- Card Artwork (Kenny)
 	Enemy cards (Priority)
 	Settings Cards
 	Object Cards
