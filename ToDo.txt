@@ -4,6 +4,8 @@ IMPORTANT : Add some way to optimize the game
 
 Each card type (Player, Settings, Enity, Object) will need to be a child class of the base card class
 
+Use piskelapp to draw art
+
 Tasks #####################################################################################################
 - Card should only be able to be dragged within the yellow play area and flash the card red
 - Enity cards can target other cards
