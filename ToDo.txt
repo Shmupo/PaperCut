@@ -1,13 +1,10 @@
-3. Initial Cards should spawn in the rectangle on the left
-4. Need background music
-	Maybe make the card slightly larger / add a shadow
-7. IMPORTANT : Add some way to optimize the game
+IMPORTANT : Add some way to optimize the game
 	We cannot have tons of cards constantly wanting to update() or it will slow the game down
 	Create a list of active cards and if a card is in that list, allow it to update
 
-Each card type (Player, Settings, Enemy, Object) will need to be a child class of the base card class
+Each card type (Player, Settings, Enity, Object) will need to be a child class of the base card class
 
-Tasks
+Tasks #####################################################################################################
 - Card should only be able to be dragged within the yellow play area and flash the card red
 - Enity cards can target other cards
 	need health/attack values
@@ -20,6 +17,7 @@ Tasks
 	When card attacks
 	When card dies
 	When a card is created
+	Background Music
 - Menu (Andrew)
 - When the player interacts with the shack, spawns goblins
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer
@@ -27,3 +25,4 @@ Tasks
 - Allow the user to store cards on the left
 - Save file (Do last)
 - When hovering over a card, display a box in the bottom right corner of the screen to describe the card
+- Make the left area a backpack/storage area for cards
