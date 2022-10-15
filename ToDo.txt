@@ -28,3 +28,14 @@ Tasks ##########################################################################
 - Save file (Do last)
 - When hovering over a card, display a box in the bottom right corner of the screen to describe the card
 - Make the left area a backpack/storage area for cards
+
+Game ideas ################################################################################################
+- Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
+	- setting cards are interacted with to produce many of the replenishment items
+	- the challenge will be that enemy cards can be on timers and may get stronger or activate an event over time
+	- player needs to balance producing items over attacking enemies
+	- npcs can be attacked for a quick bump in food/drinks, but remove the ability to interact with them
+- Player will have two bars along each side of the card, indicating health and damage
+	- damage bar can go down, will need to be replenished with items
+- Enemies may have these same bars or will have a value indicating how much damage and health they have
+	- Some enemies will stack their cards to become stronger over time
