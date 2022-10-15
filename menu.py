@@ -5,9 +5,11 @@ import pygame as pg
 class Menu():
     def __init__(self, game):
         self.screen = game.screen
-        self.ng_image = pg.transform.scale(pg.image.load(f'images/NewGameCard.png'), (96, 128))
-        self.cont_image = pg.transform.scale(pg.image.load(f'images/ContinueCard.png'), (96, 128))
-        self.exit_image = pg.transform.scale(pg.image.load(f'images/ExitCard.png'), (96, 128))
+        self.settings = game.settings
+        self.card_size = self.settings.card_size
+        self.ng_image = pg.transform.scale(pg.image.load(f'images/NewGameCard.png'), self.card_size)
+        self.cont_image = pg.transform.scale(pg.image.load(f'images/ContinueCard.png'), self.card_size)
+        self.exit_image = pg.transform.scale(pg.image.load(f'images/ExitCard.png'), self.card_size)
         self.ng_rect = self.ng_image.get_rect()
         self.cont_rect = self.cont_image.get_rect()
         self.exit_rect = self.exit_image.get_rect()
@@ -23,7 +25,6 @@ class Menu():
                 x, y = pg.mouse.get_pos()
                 if self.ng_rect.collidepoint(x, y):
                    self.new_game()
-                   print('click')
                 elif self.cont_rect.collidepoint(x, y):
                     self.load_save()
                 elif self.exit_rect.collidepoint(x, y):

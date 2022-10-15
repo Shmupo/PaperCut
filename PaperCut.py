@@ -2,7 +2,7 @@
 
 import pygame as pg
 from settings import Settings
-from card_base import Card
+from cards import Card
 from menu import Menu
 
 # The entirety of the game will mostly run here
@@ -12,13 +12,14 @@ class Game:
         self.settings = Settings()
         self.size = self.settings.window_x, self.settings.window_y
         self.screen = pg.display.set_mode(size=self.size)
+        self.card_size = self.settings.card_size
         pg.display.set_caption("Papercut")
 
         background = pg.image.load('images/background.png')
         self.background = pg.transform.scale(background, self.size)
         
         card_image = pg.image.load('images/playercard.png')
-        card_image = pg.transform.scale(card_image, (96, 128))
+        card_image = pg.transform.scale(card_image, self.card_size)
         self.test_card = Card(self, card_image)
 
         self.menu = Menu(self)
@@ -37,11 +38,6 @@ class Game:
             self.test_card.update()
             
             pg.display.update()
-
-
-
-
-
 
 # this should be left alone
 def main():

@@ -4,32 +4,18 @@ See examples to match card color and symbols
 
 Use piskelapp to draw art
 
-Next priority is to get enemy cards functioning
-	We are going to start with the shack card and have it periodically spawn goblins
-	For now, each goblin will drop a milk when defeated to replenish the player
-
-Tasks ##########################################################################################################################
-- Card should only be able to be dragged within the yellow play area and flash the card red to indicate the card could not be dragged
-	need health/attack values
-- Card Artwork (Kenny)
-	Enemy cards
-	Settings Cards
-	Object Cards
+Tasks For Next Week ############################################################################################################
 - Sound Effects
 	When clicking on a card
 	When card attacks
 	When card dies
-	When a card is created
 	Background Music
-- Improve menu graphics/effects
+	When clicking on an option in the menu, play a sound
 - The shack spawns goblins after a timer, show timer progress with a bar below the card
+- Create progress bar class
+- Create Enemy card class
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
-- Allow object to stack below an entity card and buff entity cards that will sit on top
-- Enemy cards can stack somehow...
-- Allow the user to store cards on the left
-	- Might remove this ability and just have all cards laid out on the play area
-- When hovering over a card, display a box in the bottom right corner of the screen to describe the card and provide higher detail stats
-- Make the left area a backpack/storage area for cards (maybe)
+- When player is dragged onto enemy card, start progress bar and initiate fight
 
 Game ideas #####################################################################################################################
 - Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting

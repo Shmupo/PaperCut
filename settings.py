@@ -7,3 +7,5 @@ class Settings:
 
         self.play_area_left = 172
         self.play_area_top = 72
+
+        self.card_size = (96, 128)
