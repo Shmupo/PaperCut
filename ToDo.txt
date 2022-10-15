@@ -1,18 +1,18 @@
-IMPORTANT : Add some way to optimize the game
-	We cannot have tons of cards constantly wanting to update() or it will slow the game down
-	Create a list of active cards and if a card is in that list, allow it to update
-
+Info ###########################################################################################################################
 Each card type (Player, Settings, Entity, Object) will need to be a child class of the base card class
 See examples to match card color and symbols
 
 Use piskelapp to draw art
 
-Tasks #####################################################################################################
-- Card should only be able to be dragged within the yellow play area and flash the card red
-- Enity cards can target other cards
+Next priority is to get enemy cards functioning
+	We are going to start with the shack card and have it periodically spawn goblins
+	For now, each goblin will drop a milk when defeated to replenish the player
+
+Tasks ##########################################################################################################################
+- Card should only be able to be dragged within the yellow play area and flash the card red to indicate the card could not be dragged
 	need health/attack values
 - Card Artwork (Kenny)
-	Enemy cards (Priority)
+	Enemy cards
 	Settings Cards
 	Object Cards
 - Sound Effects
@@ -28,11 +28,10 @@ Tasks ##########################################################################
 - Enemy cards can stack somehow...
 - Allow the user to store cards on the left
 	- Might remove this ability and just have all cards laid out on the play area
-- Save file (Do last)
 - When hovering over a card, display a box in the bottom right corner of the screen to describe the card and provide higher detail stats
 - Make the left area a backpack/storage area for cards (maybe)
 
-Game ideas ################################################################################################
+Game ideas #####################################################################################################################
 - Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
 	- setting cards are interacted with to produce many of the replenishment items
 	- the challenge will be that enemy cards can be on timers and may get stronger or activate an event over time
