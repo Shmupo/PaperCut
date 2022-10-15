@@ -2,7 +2,8 @@ IMPORTANT : Add some way to optimize the game
 	We cannot have tons of cards constantly wanting to update() or it will slow the game down
 	Create a list of active cards and if a card is in that list, allow it to update
 
-Each card type (Player, Settings, Enity, Object) will need to be a child class of the base card class
+Each card type (Player, Settings, Entity, Object) will need to be a child class of the base card class
+See examples to match card color and symbols
 
 Use piskelapp to draw art
 
@@ -20,14 +21,16 @@ Tasks ##########################################################################
 	When card dies
 	When a card is created
 	Background Music
-- Menu (Andrew)
-- When the player interacts with the shack, spawns goblins
-- When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer
+- Improve menu graphics/effects
+- The shack spawns goblins after a timer, show timer progress with a bar below the card
+- When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
 - Allow object to stack below an entity card and buff entity cards that will sit on top
+- Enemy cards can stack somehow...
 - Allow the user to store cards on the left
+	- Might remove this ability and just have all cards laid out on the play area
 - Save file (Do last)
-- When hovering over a card, display a box in the bottom right corner of the screen to describe the card
-- Make the left area a backpack/storage area for cards
+- When hovering over a card, display a box in the bottom right corner of the screen to describe the card and provide higher detail stats
+- Make the left area a backpack/storage area for cards (maybe)
 
 Game ideas ################################################################################################
 - Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
