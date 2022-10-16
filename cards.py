@@ -1,4 +1,6 @@
 #This modules should only be used for testing is is used as a parent class for other card classes
+
+# Problem : when a card is directly on top of another one, both cards move
 import pygame as pg
 
 class Card:
@@ -12,8 +14,6 @@ class Card:
         # a list of what the card can interact with
         self.targets = []
         self.last_pos = (0, 0)
-
-        background = pg.image.load('images/background.png')
 
     # moves the card when the user drags it around
     def check_drag(self):
@@ -36,21 +36,31 @@ class Card:
 
 class EnemyCard(Card):
     def __init__(self): 
-        super().__init__(self)
+        pass
 
 
 class SettingCard(Card):
-    def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card'):
-        super().__init__(self, game, card_image, name, description)
+    def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', duration = 0, accepted_cards = None, event = None):
+        super().__init__(game, card_image, name, description)
+        self.duration = duration
+        # list of cards that can interact with this card
+        self.accepted_cards = accepted_cards
+        self.events = event
+        self.rect.x = 100
+        self.rect.y = 100
+
+    # when triggered, create and start the progress bar
+    def start_timer(self):
+        pass
 
     def trigger_event():
         pass
 
-    def update(self):
-        pass
-
     def draw(self):
-        pass
+        super().draw()
+
+    def update(self):
+        super().update()
 
 
 class ObjectCard(Card):
