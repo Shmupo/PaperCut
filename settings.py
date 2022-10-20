@@ -9,3 +9,5 @@ class Settings:
         self.play_area_top = 72
 
         self.card_size = (96, 128)
+        self.menu_color = (85, 159, 248)
+        self.font_color = (152, 249, 119)
