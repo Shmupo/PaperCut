@@ -1,6 +1,7 @@
 # Classes for the different types of cards
 # Current card types : Object, Enemy, Player, Setting, NPC
 import pygame as pg
+import time
 
 class Card:
     def __init__(self, game, card_image, name='Base Card', description='This is a base card'):
@@ -21,14 +22,10 @@ class Card:
             if self.rect.collidepoint(self.rect.center) == pg.mouse.get_pos():
                 self.rect.center = self.last_pos
                 self.draw()
-            
             elif pg.mouse.get_pressed()[0]:
                 self.rect.center = pg.mouse.get_pos()
                 self.collide = self.rect.collidepoint(self.rect.center)
                 self.last_pos = self.rect.center
-                
-
-
 
     # checks if the card was dropped on a target and if it is valid
     def check_target(self):
@@ -45,16 +42,7 @@ class Card:
 
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card'): 
-        self.game = game
-        self.screen = self.game.screen
-        self.name = name
-        self.description = description
-        self.image = card_image
-        self.rect = self.image.get_rect()
-        # a list of what the card can interact with
-        self.targets = []
-        self.last_pos = (0, 0)
-        self.collide = 0
+        super().__init__(game, card_image, name, description)
 
 
 class SettingCard(Card):
@@ -80,11 +68,11 @@ class SettingCard(Card):
         self.card_size = self.settings.card_size
         self.start_timer()
 
-
     # when triggered, create and start the progress bar
     def start_timer(self):
         clock = pg.time.Clock()
         clock.tick(self.fps)
+
     def trigger_event(self):
         self.inner_rect =[self.rect.x+6,self.rect.y+112,0,5]
 
@@ -96,6 +84,8 @@ class SettingCard(Card):
 
     def draw(self):
         super().draw()
+        pg.draw.rect(self.screen,self.red,self.border_rect, 3)
+        pg.draw.rect(self.screen,self.green,(self.inner_rect[0],self.inner_rect[1],int(self.inner_rect[2]),self.inner_rect[3]))
 
     def update(self):
         super().update()
@@ -104,22 +94,8 @@ class SettingCard(Card):
         if self.inner_rect[2] < 76:
             self.inner_rect[2] += (self.speed/self.fps)
 
-            pg.draw.rect(self.screen,self.red,self.border_rect, 3)
-            pg.draw.rect(self.screen,self.green,(self.inner_rect[0],self.inner_rect[1],int(self.inner_rect[2]),self.inner_rect[3]))
+            self.draw()
+
            ## pg.display.flip()
         else:
             self.trigger_event()
-
-
-class ObjectCard(Card):
-    def __init__(self, game ,card_image, name='Object Card', description='This is an object card'):
-        super().__init__(self, game, card_image, name, description)
-
-    def replenish(self, EntityCard):
-        pass
-
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
