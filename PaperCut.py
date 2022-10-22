@@ -14,11 +14,6 @@ class Game:
         self.screen = pg.display.set_mode(size=self.size)
         self.screen.fill(self.settings.menu_color)
         pg.display.set_caption("Papercut")
-        font = pg.font.Font('fonts/chalkduster.ttf', 108)
-        text = font.render('PaperCut', True, self.settings.font_color)
-        textRect = text.get_rect()
-        textRect.center = (self.settings.window_x // 2, self.settings.window_y // 4)
-        self.screen.blit(text, textRect)
 
         background = pg.image.load('images/background.png')
         self.background = pg.transform.scale(background, self.size)

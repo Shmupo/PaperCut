@@ -19,6 +19,11 @@ class Menu():
         self.ng_rect.y = self.cont_rect.y = self.exit_rect.y = 400
         self.running = True
 
+        self.font = pg.font.Font('fonts/chalkduster.ttf', 108)
+        self.text = self.font.render('PaperCut', True, self.settings.font_color)
+        self.textRect = self.text.get_rect()
+        self.textRect.center = (self.settings.window_x // 2, self.settings.window_y // 4)
+
     def select_option(self):
         for event in pg.event.get():
             if(event.type == pg.MOUSEBUTTONUP):
@@ -52,4 +57,5 @@ class Menu():
         self.screen.blit(self.ng_image, (self.ng_rect.x, self.ng_rect.y))
         self.screen.blit(self.cont_image, (self.cont_rect.x, self.cont_rect.y))
         self.screen.blit(self.exit_image, (self.exit_rect.x, self.exit_rect.y))
+        self.screen.blit(self.text, self.textRect)
         pg.display.update()

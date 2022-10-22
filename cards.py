@@ -1,6 +1,5 @@
-#This modules should only be used for testing is is used as a parent class for other card classes
-
-# Problem : when a card is directly on top of another one, both cards move
+# Classes for the different types of cards
+# Current card types : Object, Enemy, Player, Setting, NPC
 import pygame as pg
 
 class Card:
