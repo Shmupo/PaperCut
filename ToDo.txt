@@ -11,8 +11,7 @@ Tasks For Next Week ############################################################
 	When card dies
 	Background Music
 	When clicking on an option in the menu, play a sound
-- The shack spawns goblins after a timer, show timer progress with a bar below the card
-- Create progress bar class
+- Health and attack bars next to player card and enemy cards
 - Create Enemy card class
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
 - When player is dragged onto enemy card, start progress bar and initiate fight
