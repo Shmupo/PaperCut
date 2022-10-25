@@ -17,15 +17,11 @@ class Card:
         self.collide = 0
 
     # moves the card when the user drags it around
-    def check_drag(self):
-        if self.rect.x < pg.mouse.get_pos()[0] < self.rect.x + self.rect.width and self.rect.y < pg.mouse.get_pos()[1] < self.rect.y + self.rect.height:
-            if self.rect.collidepoint(self.rect.center) == pg.mouse.get_pos():
-                self.rect.center = self.last_pos
-                self.draw()
-            elif pg.mouse.get_pressed()[0]:
-                self.rect.center = pg.mouse.get_pos()
-                self.collide = self.rect.collidepoint(self.rect.center)
-                self.last_pos = self.rect.center
+    # this is used by the createcards class
+    def drag(self):
+            self.rect.center = pg.mouse.get_pos()
+            #self.collide = self.rect.collidepoint(self.rect.center)
+            self.last_pos = self.rect.center
 
     # checks if the card was dropped on a target and if it is valid
     def check_target(self):
@@ -35,8 +31,6 @@ class Card:
         self.screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def update(self):
-        self.check_drag()
-        #self.check_target()
         self.draw()
 
 
@@ -79,7 +73,7 @@ class SettingCard(Card):
         self.goblin_image = pg.image.load('images/GoblinCard.png')
         self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image)
-        self.game.update_card_list.append(self.goblin_card)
+        self.game.cards.update_list.append(self.goblin_card)
         self.start_timer()
 
     def draw(self):

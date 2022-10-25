@@ -18,7 +18,6 @@ class Game:
         background = pg.image.load('images/background.png')
         self.background = pg.transform.scale(background, self.size)
         
-        self.update_card_list = []
         self.cards = Cards(self)
 
         self.menu = Menu(self)
@@ -34,8 +33,7 @@ class Game:
             self.screen.blit(self.background, (0, 0))
                 # there is an image that is off-screen but is still loaded and
                 # needs to be switched with the current screen using pg.display.update
-            for card in self.update_card_list:
-                card.update()
+            self.cards.update()
             
             pg.display.update()
 
