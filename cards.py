@@ -2,6 +2,7 @@
 # Current card types : Object, Enemy, Player, Setting, NPC
 import pygame as pg
 import time
+import copy
 
 class Card:
     def __init__(self, game, card_image, name='Base Card', description='This is a base card'):
@@ -9,8 +10,8 @@ class Card:
         self.screen = self.game.screen
         self.name = name
         self.description = description
-        self.image = card_image
-        self.rect = self.image.get_rect()
+        self.card_image = card_image
+        self.rect = self.card_image.get_rect()
         # a list of what the card can interact with
         self.targets = []
         self.last_pos = (0, 0)
@@ -28,7 +29,7 @@ class Card:
         pass
 
     def draw(self):
-        self.screen.blit(self.image, (self.rect.x, self.rect.y))
+        self.screen.blit(self.card_image, (self.rect.x, self.rect.y))
 
     def update(self):
         self.draw()
@@ -39,20 +40,23 @@ class EnemyCard(Card):
         super().__init__(game, card_image, name, description)
 
 
+# event_card param : cards that are to be spawned upon trigger_event()
+#   only duplicates of these cards are created
+# accepted cards param : list of cards that can interact with this card
+# duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
-                 duration = 1, accepted_cards = None, event = None):
+                 duration = 1, accepted_cards = None, event_cards = None):
         super().__init__(game, card_image, name, description)
         # list of cards that can interact with this card
         self.accepted_cards = accepted_cards
-        self.events = event
+        self.event_cards = event_cards
         self.rect.x = 100
         self.rect.y = 100
         self.game = game
         self.settings = game.settings
         self.card_size = self.settings.card_size
         self.bar_color = (0, 0, 255)
-        # in seconds, how long to count before event triggers
         self.duration = duration
         self.start_time = time.time()
         self.time_progress = 0
@@ -74,11 +78,13 @@ class SettingCard(Card):
 
         pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
 
+    # spawns cards in event_cards into play
     def trigger_event(self):
-        goblin_image = pg.image.load('images/GoblinCard.png')
-        goblin_image = pg.transform.scale(goblin_image, self.game.settings.card_size)
-        goblin_card = EnemyCard(self.game, goblin_image)
-        self.game.cards.update_list.append(goblin_card)
+        for card in self.event_cards:
+            if type(card) is EnemyCard:
+                enemy_copy = EnemyCard(self.game, card.card_image)
+                self.game.cards.update_list.append(enemy_copy)
+                self.game.cards.all_cards.append(enemy_copy)
 
     def draw(self):
         super().draw()

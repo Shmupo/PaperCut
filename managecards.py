@@ -7,6 +7,12 @@
 import pygame as pg
 from cards import *
 
+
+# Cards must always be added to the all_cards list even if not being updated
+# all_cards is used to detect drags
+# update_list is used to update cardss
+# card_to+drag is the current selected card
+
 class Cards:
     def __init__(self,game):
         self.game = game
@@ -15,7 +21,6 @@ class Cards:
         self.update_list = []
         self.all_cards = []
         self.card_to_drag = None
-        self.last_card_to_drag = None
 
         self.card_image = pg.image.load('images/playercard.png')
         self.card_image = pg.transform.scale(self.card_image, self.card_size)
@@ -23,11 +28,17 @@ class Cards:
         self.update_list.append(self.player_card)
         self.all_cards.append(self.player_card)
 
+        # used to create copties in cards.py
+        self.goblin_image = pg.image.load('images/GoblinCard.png')
+        self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
+        self.goblin_card = EnemyCard(self.game, self.goblin_image, name="Goblin", 
+                                     description='He put his prize belongings on his back. Minds his own business. Likes other goblins.')
+
         self.shack_image = pg.image.load('images/ShackCard.png')
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives', duration=5, 
-                                      accepted_cards=self.player_card)
+                                      accepted_cards=self.player_card, event_cards=[self.goblin_card])
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
 
@@ -40,9 +51,8 @@ class Cards:
         for event in pg.event.get():
             # if there is no card being dragged, drag one if mouse is on a card
             if self.card_to_drag == None:
-                for card in self.all_cards:
-                    if card.rect.x < pg.mouse.get_pos()[0] < card.rect.x + card.rect.width and card.rect.y < pg.mouse.get_pos()[1] < card.rect.y + card.rect.height:
-                        if event.type == pg.MOUSEBUTTONDOWN:    
+                for card in self.update_list:
+                        if card.rect.collidepoint(pg.mouse.get_pos()) and event.type == pg.MOUSEBUTTONDOWN:  
                             self.card_to_drag = card
             # release mouse
             elif event.type == pg.MOUSEBUTTONUP: 
