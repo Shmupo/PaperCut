@@ -2,7 +2,7 @@
 
 import pygame as pg
 from settings import Settings
-from createcards import Cards
+from managecards import Cards
 from menu import Menu
 
 # The entirety of the game will mostly run here

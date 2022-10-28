@@ -40,56 +40,50 @@ class EnemyCard(Card):
 
 
 class SettingCard(Card):
-    def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', duration = 0, accepted_cards = None, event = None):
+    def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
+                 duration = 1, accepted_cards = None, event = None):
         super().__init__(game, card_image, name, description)
-        self.duration = duration
         # list of cards that can interact with this card
         self.accepted_cards = accepted_cards
         self.events = event
         self.rect.x = 100
         self.rect.y = 100
-       ## self.border_rect = [5,25,80,10]
-       ## self.inner_rect =[7,27.5,0,5]
-        self.border_rect = [self.rect.x+5,self.rect.y+110,80,10]
-        self.inner_rect =[self.rect.x+6,self.rect.y+112,0,5]
-        self.white = (255,255,255)
-        self.red = (255,0,0)
-        self.green = (0,255,0)
-        self.fps = 60
-        self.speed = 5
         self.game = game
         self.settings = game.settings
         self.card_size = self.settings.card_size
-        self.start_timer()
+        self.bar_color = (0, 0, 255)
+        # in seconds, how long to count before event triggers
+        self.duration = duration
+        self.start_time = time.time()
+        self.time_progress = 0
+        self.progress_rect = pg.Rect(self.rect.x, self.rect.y + self.rect.height + 5, 0, 5)
 
-    # when triggered, create and start the progress bar
-    def start_timer(self):
-        clock = pg.time.Clock()
-        clock.tick(self.fps)
+    def progress_bar(self):
+        self.progress_rect.x = self.rect.x
+        self.progress_rect.y = self.rect.y + self.rect.height+5
+        current_time = time.time()
+
+        if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
+            self.progress_rect.width += + (self.rect.width / self.duration)
+            self.time_progress += 1
+        elif self.time_progress == self.duration: 
+            self.start_time = time.time()
+            self.time_progress = 0
+            self.trigger_event()
+            self.progress_rect.width = 0
+
+        pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
 
     def trigger_event(self):
-        self.inner_rect =[self.rect.x+6,self.rect.y+112,0,5]
-
-        self.goblin_image = pg.image.load('images/GoblinCard.png')
-        self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
-        self.goblin_card = EnemyCard(self.game, self.goblin_image)
-        self.game.cards.update_list.append(self.goblin_card)
-        self.start_timer()
+        goblin_image = pg.image.load('images/GoblinCard.png')
+        goblin_image = pg.transform.scale(goblin_image, self.game.settings.card_size)
+        goblin_card = EnemyCard(self.game, goblin_image)
+        self.game.cards.update_list.append(goblin_card)
 
     def draw(self):
         super().draw()
-        pg.draw.rect(self.screen,self.red,self.border_rect, 3)
-        pg.draw.rect(self.screen,self.green,(self.inner_rect[0],self.inner_rect[1],int(self.inner_rect[2]),self.inner_rect[3]))
 
     def update(self):
         super().update()
-        ##self.border_rect = [self.rect.x+5,self.rect.y+110,80,10]
-        ##self.inner_rect =[self.rect.x+6,self.rect.y+112,0,5]
-        if self.inner_rect[2] < 76:
-            self.inner_rect[2] += (self.speed/self.fps)
-
-            self.draw()
-
-           ## pg.display.flip()
-        else:
-            self.trigger_event()
+        self.progress_bar()
+        self.draw()

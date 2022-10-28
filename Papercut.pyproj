@@ -22,10 +22,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="cards.py" />
-    <Compile Include="createcards.py" />
+    <Compile Include="managecards.py" />
     <Compile Include="menu.py" />
     <Compile Include="Papercut.py" />
     <Compile Include="settings.py" />
+    <Compile Include="timer.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
