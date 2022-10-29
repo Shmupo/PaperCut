@@ -7,26 +7,33 @@ import copy
 class Card:
     def __init__(self, game, card_image, name='Base Card', description='This is a base card'):
         self.game = game
+        self.settings = game.settings
         self.screen = self.game.screen
         self.name = name
         self.description = description
         self.card_image = card_image
         self.rect = self.card_image.get_rect()
+        self.rect.clamp_ip(self.settings.play_area_rect)
+        self.accepted_cards = None
         # a list of what the card can interact with
         self.targets = []
-        self.last_pos = (0, 0)
-        self.collide = 0
 
     # moves the card when the user drags it around
     # this is used by the createcards class
     def drag(self):
-            self.rect.center = pg.mouse.get_pos()
-            #self.collide = self.rect.collidepoint(self.rect.center)
-            self.last_pos = self.rect.center
+        self.rect.center = pg.mouse.get_pos()
+        self.rect.clamp_ip(self.settings.play_area_rect)
+
+    # highlight the borders around the card
+    def highlight(self):
+        pass
 
     # checks if the card was dropped on a target and if it is valid
     def check_target(self):
         pass
+
+    def __repr__(self):
+        return repr(str(type(self)) + ' ' + self.name + str(self.rect.center))
 
     def draw(self):
         self.screen.blit(self.card_image, (self.rect.x, self.rect.y))
@@ -34,10 +41,17 @@ class Card:
     def update(self):
         self.draw()
 
+class PlayerCard(Card):
+    def __init__(self, game, card_image, name, description):
+        super().__init__(game, card_image, name, description)
+        self.health = 10
+        self.damage = 5
 
 class EnemyCard(Card):
-    def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card'): 
+    def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', health = 1, damage = 1): 
         super().__init__(game, card_image, name, description)
+        self.health = health
+        self.damage = damage
 
 
 # event_card param : cards that are to be spawned upon trigger_event()
@@ -81,8 +95,10 @@ class SettingCard(Card):
     # spawns cards in event_cards into play
     def trigger_event(self):
         for card in self.event_cards:
-            if type(card) is EnemyCard:
+            if type(card) is EnemyCard and card:
                 enemy_copy = EnemyCard(self.game, card.card_image)
+                enemy_copy.rect.center = self.rect.center
+                enemy_copy.rect.y += 20
                 self.game.cards.update_list.append(enemy_copy)
                 self.game.cards.all_cards.append(enemy_copy)
 
