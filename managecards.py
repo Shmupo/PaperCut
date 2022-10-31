@@ -7,8 +7,8 @@
 
 # Cards must always be added to the all_cards list even if not being updated
 # all_cards is used to detect drags
-# update_list is used to update cardss
-# card_to+drag is the current selected card
+# update_list is used to update cards
+# card_to_drag is the current selected card
 
 import pygame as pg
 from cards import *
@@ -29,25 +29,28 @@ class Cards:
         self.update_list.append(self.player_card)
         self.all_cards.append(self.player_card)
 
-        # used to create copties in cards.py
+        # used to create copies in cards.py
         self.goblin_image = pg.image.load('images/GoblinCard.png')
         self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, name="Goblin", 
-                                     description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.')
+                                     description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.',
+                                     accepted_cards=[self.player_card])
 
         self.shack_image = pg.image.load('images/ShackCard.png')
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=5, 
-                                      accepted_cards=self.player_card, event_cards=[self.goblin_card])
+                                      accepted_cards=[self.player_card], event_cards=[self.goblin_card])
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
 
     # when dragging a card, highlight all other cards that can be interacted with
     def highlight_accepted_cards(self):
-        for card in self.update_list:
-            if self.card_to_drag in card.accepted_cards:
-                card.highlight()
+        if self.card_to_drag != None:
+            for card in self.update_list:
+                if card.accepted_cards != None:
+                    if self.card_to_drag in card.accepted_cards:
+                        card.highlight()
 
     # if compatible cards are dragged onto one another, stack them
     def stack_cards(self):
@@ -73,6 +76,8 @@ class Cards:
     def update(self):
         self.set_card_to_drag()
         print(self.card_to_drag)
+
+        self.highlight_accepted_cards()
         
         # ensures only one card is being dragged at a time
         # put the card being drag to the back of the update list

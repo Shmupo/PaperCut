@@ -1,11 +1,11 @@
 # Classes for the different types of cards
 # Current card types : Object, Enemy, Player, Setting, NPC
+
 import pygame as pg
 import time
-import copy
 
 class Card:
-    def __init__(self, game, card_image, name='Base Card', description='This is a base card'):
+    def __init__(self, game, card_image, name='Base Card', description='This is a base card', accepted_cards=None):
         self.game = game
         self.settings = game.settings
         self.screen = self.game.screen
@@ -14,9 +14,11 @@ class Card:
         self.card_image = card_image
         self.rect = self.card_image.get_rect()
         self.rect.clamp_ip(self.settings.play_area_rect)
-        self.accepted_cards = None
+        self.accepted_cards = accepted_cards
         # a list of what the card can interact with
         self.targets = []
+        self.highlight_rect = pg.Rect(self.rect.x-5, self.rect.y-5, self.rect.width + 10, self.rect.height + 10)
+        self.highlight_color = (0, 150, 0)
 
     # moves the card when the user drags it around
     # this is used by the createcards class
@@ -26,7 +28,8 @@ class Card:
 
     # highlight the borders around the card
     def highlight(self):
-        pass
+        self.highlight_rect.clamp_ip(self.rect)
+        pg.draw.rect(self.screen, self.highlight_color, self.highlight_rect, border_radius=10)
 
     # checks if the card was dropped on a target and if it is valid
     def check_target(self):
@@ -40,6 +43,7 @@ class Card:
 
     def update(self):
         self.draw()
+        
 
 class PlayerCard(Card):
     def __init__(self, game, card_image, name, description):
@@ -47,23 +51,24 @@ class PlayerCard(Card):
         self.health = 10
         self.damage = 5
 
+
 class EnemyCard(Card):
-    def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', health = 1, damage = 1): 
-        super().__init__(game, card_image, name, description)
+    def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
+        super().__init__(game, card_image, name, description, accepted_cards)
         self.health = health
         self.damage = damage
+        self.highlight_color = (150, 0, 0)
 
 
 # event_card param : cards that are to be spawned upon trigger_event()
-#   only duplicates of these cards are created
+#       only duplicates of these cards are created
 # accepted cards param : list of cards that can interact with this card
 # duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
                  duration = 1, accepted_cards = None, event_cards = None):
-        super().__init__(game, card_image, name, description)
+        super().__init__(game, card_image, name, description, accepted_cards)
         # list of cards that can interact with this card
-        self.accepted_cards = accepted_cards
         self.event_cards = event_cards
         self.rect.x = 100
         self.rect.y = 100
@@ -95,15 +100,12 @@ class SettingCard(Card):
     # spawns cards in event_cards into play
     def trigger_event(self):
         for card in self.event_cards:
-            if type(card) is EnemyCard and card:
-                enemy_copy = EnemyCard(self.game, card.card_image)
+            if type(card) is EnemyCard:
+                enemy_copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
                 enemy_copy.rect.center = self.rect.center
                 enemy_copy.rect.y += 20
                 self.game.cards.update_list.append(enemy_copy)
                 self.game.cards.all_cards.append(enemy_copy)
-
-    def draw(self):
-        super().draw()
 
     def update(self):
         super().update()
