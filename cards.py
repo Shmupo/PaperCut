@@ -88,6 +88,7 @@ class SettingCard(Card):
         self.start_time = time.time()
         self.time_progress = 0
         self.progress_rect = pg.Rect(self.rect.x, self.rect.y + self.rect.height + 5, 0, 5)
+        self.active = False
 
     def progress_bar(self):
         self.progress_rect.x = self.rect.x
@@ -117,5 +118,6 @@ class SettingCard(Card):
 
     def update(self):
         super().update()
-        self.progress_bar()
+        if self.active:
+            self.progress_bar()
         self.draw()

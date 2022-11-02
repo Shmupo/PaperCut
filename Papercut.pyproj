@@ -22,8 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="cards.py" />
+    <Compile Include="cardstack.py" />
     <Compile Include="managecards.py" />
     <Compile Include="menu.py" />
+    <Compile Include="module1.py" />
     <Compile Include="Papercut.py" />
     <Compile Include="settings.py" />
     <Compile Include="timer.py" />
