@@ -27,9 +27,11 @@ class Card:
         self.rect.clamp_ip(self.settings.play_area_rect)
 
     # highlight the borders around the card
-    def highlight(self):
+    def highlight(self, color=None):
         self.highlight_rect.clamp_ip(self.rect)
-        pg.draw.rect(self.screen, self.highlight_color, self.highlight_rect, border_radius=10)
+        if color == None:
+            pg.draw.rect(self.screen, self.highlight_color, self.highlight_rect, border_radius=10)
+        else: pg.draw.rect(self.screen, color, self.highlight_rect, border_radius=10)
 
     # checks if the card was dropped on a target and if it is valid
     def check_target(self):
@@ -50,6 +52,12 @@ class PlayerCard(Card):
         super().__init__(game, card_image, name, description)
         self.health = 10
         self.damage = 5
+
+    def display_health(self):
+        pass
+
+    def display_attack(self):
+        pass
 
 
 class EnemyCard(Card):

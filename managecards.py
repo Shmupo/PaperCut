@@ -20,8 +20,10 @@ class Cards:
         self.card_size = self.settings.card_size
         self.update_list = []
         self.all_cards = []
+        self.card_stacks = []
         self.card_to_drag = None
 
+# CREATE CARDS HERE #############################################################################################
         self.card_image = pg.image.load('images/playercard.png')
         self.card_image = pg.transform.scale(self.card_image, self.card_size)
         self.player_card = PlayerCard(self.game, self.card_image, 'Player', 
@@ -43,6 +45,7 @@ class Cards:
                                       accepted_cards=[self.player_card], event_cards=[self.goblin_card])
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
+#################################################################################################################
 
     # when dragging a card, highlight all other cards that can be interacted with
     def highlight_accepted_cards(self):
@@ -52,16 +55,43 @@ class Cards:
                     if self.card_to_drag in card.accepted_cards:
                         card.highlight()
 
-    # if compatible cards are dragged onto one another, stack them
-    def stack_cards(self):
-        pass
+    # returns first card in update_list that the mouse is on that is not the card being dragged
+    def card_at_mouse(self):
+        for card in self.update_list:
+            if card.rect.collidepoint(pg.mouse.get_pos()) and card != self.card_to_drag:
+                return card
+        else: return None
 
-    # checks whether the card being dragged is dropped upon another card
-    def card_dragged_on_card(self):
+    # detecting whether a card is dragged on another card
+    def drag_card_on_card(self):
+        card_at_mouse = self.card_at_mouse()
+        # check if card stack already exists
+        if self.card_to_drag != None and card_at_mouse != None:
+            self.stack_cards(card_at_mouse)
+
+    # stacks dragged card or stack with card_at_mouse
+    def stack_cards(self, card_at_mouse):
+        # if adding to stack
+        for stack in self.card_stacks:
+            if card_at_mouse in stack and (stack != None or len(stack) != 0) and self.card_to_drag not in stack:
+                stack.append(self.card_to_drag)
+        # create own stack no stack made for cards
+        else: 
+            stacked = False
+            for stack in self.card_stacks:
+                if card_at_mouse in stack or self.card_to_drag in stack:
+                    stacked = True
+            if not stacked:
+                self.card_stacks.append([card_at_mouse, self.card_to_drag])
+                
+        print(self.card_stacks, '\n')
+
+    # aligns the cards in each stack within card_stacks
+    def align_stacked_cards(self):
         pass
 
     # sets the card to drag
-    def set_card_to_drag(self):
+    def set_drag(self):
         # if there is no card being dragged, drag one if mouse is on a card
         if self.card_to_drag == None:
             for card in self.update_list:
@@ -70,12 +100,11 @@ class Cards:
                         self.card_to_drag = card
         # release mouse
         elif not pg.mouse.get_pressed()[0]: 
-            #card_dragged_on_card()
+            self.drag_card_on_card()
             self.card_to_drag = None
 
     def update(self):
-        self.set_card_to_drag()
-        print(self.card_to_drag)
+        self.set_drag()
 
         self.highlight_accepted_cards()
         
