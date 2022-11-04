@@ -1,9 +1,6 @@
 import pygame as pg
 
-# acts like the stack data structure, cards only can be removed when the top card is dragged off
-# cards is the Cards() object
-
-# TODO : Allow player to drag off the last card 
+# cards is the Cards() object for card management
 
 class CardStack:
     # how much to move the next card in the stack down

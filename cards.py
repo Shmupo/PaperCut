@@ -59,7 +59,6 @@ class PlayerCard(Card):
     def display_attack(self):
         pass
 
-
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
         super().__init__(game, card_image, name, description, accepted_cards)

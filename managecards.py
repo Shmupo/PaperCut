@@ -15,6 +15,7 @@
 import pygame as pg
 from cards import *
 from cardstack import CardStack
+import time
 
 class Cards:
     def __init__(self,game):
@@ -24,6 +25,12 @@ class Cards:
         self.update_list = []
         self.all_cards = []
         self.card_to_drag = None
+        
+        # for displaying description
+        self.last_card_at_mouse = None
+        self.time_start = None
+        self.counting = 0
+        self.font = pg.font.Font('fonts/Pixeloid.ttf', 10)
 
 # CREATE CARDS HERE #############################################################################################
         self.card_image = pg.image.load('images/playercard.png')
@@ -56,6 +63,26 @@ class Cards:
                 if card.accepted_cards != None:
                     if self.card_to_drag in card.accepted_cards:
                         card.highlight()
+
+    # display card description if hovered over for more than 1 second
+    def display_description(self):
+        card = self.card_at_mouse()
+        if card == self.last_card_at_mouse and not self.counting:
+            self.time_start = time.time();
+            self.counting = True
+        elif self.counting and card != None:
+            if card != self.last_card_at_mouse:
+                self.last_card_at_mouse = card
+                self.counting = False
+                self.time_start = None
+            elif time.time() - self.time_start > 1:
+                text = self.font.render(card.description, True, (255, 255, 255), (0, 0, 0))
+                rect = text.get_rect()
+                rect.center = pg.mouse.get_pos()
+                rect.x += rect.width / 2 + 20
+                rect.y += 40
+                self.game.screen.blit(text, rect)
+        else: self.last_card_at_mouse = card
 
     # returns first card in update_list that the mouse is on that is not the card being dragged
     def card_at_mouse(self):
@@ -104,8 +131,7 @@ class Cards:
     def update(self):
         self.set_drag()
         self.highlight_accepted_cards()
-
-        print(self.card_to_drag)
+        #print(self.card_to_drag)
         
         # ensures only one card is being dragged at a time
         # put the card being drag to the back of the update list
@@ -113,7 +139,10 @@ class Cards:
             self.update_list.append(self.update_list.pop(self.update_list.index(self.card_to_drag)))
             self.card_to_drag.drag()
 
-        print(self.update_list)
+        #print(self.update_list)
 
         for card in self.update_list:
             card.update()
+
+        self.display_description()
+        print(self.last_card_at_mouse)
