@@ -60,14 +60,19 @@ class Cards:
     # returns first card in update_list that the mouse is on that is not the card being dragged
     def card_at_mouse(self):
         for card in self.update_list:
+            if type(card) == CardStack:
+                for card_in_stack in card.stack:
+                    if card_in_stack.rect.collidepoint(pg.mouse.get_pos()) and card_in_stack != self.card_to_drag:
+                        return card_in_stack
+            else: 
                 if card.rect.collidepoint(pg.mouse.get_pos()) and card != self.card_to_drag:
-                    return card
+                        return card
         else: return None
 
     # detecting whether a card is dragged on another card to create a stack or add to existing stack
     def check_drag_card_on_card(self):
         target = self.card_at_mouse()
-        if self.card_to_drag != None:
+        if self.card_to_drag != None and type(self.card_to_drag) != CardStack:
             if type(target) == CardStack:
                 target.add(self.card_to_drag)
             elif target:
@@ -80,10 +85,17 @@ class Cards:
     def set_drag(self):
         # if there is no card being dragged, drag one if mouse is on a card
         if self.card_to_drag == None:
-            for card in self.update_list:
+            for target in self.update_list:
                 if pg.mouse.get_pressed()[0]:
-                    if card.rect.collidepoint(pg.mouse.get_pos()):
-                        self.card_to_drag = card
+                    # if target is a stack of cards, check if user wants to drag the bottom off
+                    if type(target) == CardStack:
+                        if target.stack[-1].rect.collidepoint(pg.mouse.get_pos()):
+                            target.remove_bottom()
+                            self.card_to_drag = target.stack[-1]
+                        elif target.rect.collidepoint(pg.mouse.get_pos()):
+                                self.card_to_drag = target
+                    elif target.rect.collidepoint(pg.mouse.get_pos()):
+                            self.card_to_drag = target
         # release mouse
         elif not pg.mouse.get_pressed()[0]: 
             self.check_drag_card_on_card()
@@ -92,6 +104,8 @@ class Cards:
     def update(self):
         self.set_drag()
         self.highlight_accepted_cards()
+
+        print(self.card_to_drag)
         
         # ensures only one card is being dragged at a time
         # put the card being drag to the back of the update list

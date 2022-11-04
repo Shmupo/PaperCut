@@ -35,10 +35,13 @@ class CardStack:
             card.rect.y = self.rect.y + self.y_offset * self.stack.index(card)
 
     # if the bottom card is dragged, remove it
-    def check_bottom_drag(self):
-        if self.cards.card_to_drag == self.stack[-1]:
-            self.cards.update_list.append(self.stack[-1])
-            self.stack.remove(-1)
+    def remove_bottom(self):
+        self.cards.update_list.append(self.stack[-1])
+        self.stack.pop()
+        self.rect.y - self.game.settings.card_size[1]
+
+        if len(self.stack) < 2:
+            self.convert_to_card()
 
     # adds card to stack, removing it from the update_list
     def add(self, card):
@@ -47,8 +50,16 @@ class CardStack:
         self.rect.y += card.rect.height
         self.rect.clamp(card)
 
+    # if only 1 card in stack, remove the CardStack object and put the single card into update list
+    def convert_to_card(self):
+        self.cards.update_list.insert(-1, self.stack[0])
+        self.cards.update_list.pop(self.cards.update_list.index(self))
+
+    # activates the cards in the stack to trigger their events
+    def activate_cards():
+        pass
+
     def update(self):
-        self.check_bottom_drag()
         # for testing
         pg.draw.rect(self.cards.game.screen, (255, 255, 255), self.rect)
         for card in self.stack:
