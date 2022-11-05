@@ -54,6 +54,14 @@ class Cards:
                                       accepted_cards=[self.player_card], event_cards=[self.goblin_card])
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
+
+        self.milk_image = pg.image.load('images/MilkCard.png')
+        self.milk_image = pg.transform.scale(self.milk_image,self.card_size)
+        self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
+                                        description='Nothing like having a carton of milk after a hard days work.',
+                                        accepted_cards=[])
+        self.update_list.append(self.milk_card)
+        self.all_cards.append(self.milk_card)
 #################################################################################################################
 
     # when dragging a card, highlight all other cards that can be interacted with
@@ -145,4 +153,4 @@ class Cards:
             card.update()
 
         self.display_description()
-        print(self.last_card_at_mouse)
+        #print(self.last_card_at_mouse)

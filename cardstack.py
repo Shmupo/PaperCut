@@ -30,6 +30,7 @@ class CardStack:
         for card in self.stack:
             card.rect.x = self.rect.x
             card.rect.y = self.rect.y + self.y_offset * self.stack.index(card)
+        card.trigger_event()
 
     # if the bottom card is dragged, remove it
     def remove_bottom(self):
@@ -46,15 +47,14 @@ class CardStack:
         self.cards.append(card)
         self.rect.y += card.rect.height
         self.rect.clamp(card)
-
     # if only 1 card in stack, remove the CardStack object and put the single card into update list
     def convert_to_card(self):
         self.cards.update_list.insert(-1, self.stack[0])
         self.cards.update_list.pop(self.cards.update_list.index(self))
-
     # activates the cards in the stack to trigger their events
-    def activate_cards():
-        pass
+    def activate_cards(card):
+        print("Activate_card")
+        card.trigger_event()
 
     def update(self):
         # for testing
