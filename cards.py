@@ -54,10 +54,19 @@ class PlayerCard(Card):
         self.damage = 5
 
     def display_health(self):
-        pass
+        font = pygame.font.SysFont('Arial', 10)
+        text = font.render('Health: ' + self.health, 1, (0,0,0))
+        screen.blit(text, self.x, self.y)
+        # pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, width, self.health, 5))  graphic health bar
+        # update when health is improved or reduced
+        # max health
 
     def display_attack(self):
-        pass
+        font = pygame.font.SysFont('Arial', 10)
+        text = font.render('Damage: ' + self.damage, 1, (0,0,0))y
+        screen.blit(text, self.x, self.y+12)
+        # update when damage is increased or reduced
+        # max damage?
 
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
