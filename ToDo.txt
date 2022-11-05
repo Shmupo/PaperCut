@@ -15,7 +15,7 @@ Tasks For Next Week ############################################################
 - Create Enemy card class
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
 - When player is dragged onto enemy card, start progress bar and initiate fight
-- creat object card class and have them interact with player card (healing)
+- creat object card class and have them interact with player card (healing) - Michael Duenas
 Game ideas #####################################################################################################################
 - Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
 	- setting cards are interacted with to produce many of the replenishment items
