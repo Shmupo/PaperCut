@@ -48,8 +48,8 @@ class Card:
         
 
 class PlayerCard(Card):
-    def __init__(self, game, card_image, name, description):
-        super().__init__(game, card_image, name, description)
+    def __init__(self, game, card_image, name, description, accepted_cards=None):
+        super().__init__(game, card_image, name, description, accepted_cards)
         self.health = 10
         self.damage = 5
 
@@ -129,3 +129,19 @@ class SettingCard(Card):
         if self.active:
             self.progress_bar()
         self.draw()
+
+
+class ConsumableCard(Card):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, event_cards = None):
+        super().__init__(game, card_image, name, description, accepted_cards)
+        #restore 1 heatlh or 1 attack default value for now
+        self.health = 1
+        self.attack = 1
+
+    def trigger_event(self):
+        self.consume()
+
+    def consume(self):
+        #restore health or attack
+        #delete card
+        pass
