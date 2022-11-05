@@ -23,6 +23,10 @@ class Menu():
         self.text = self.font.render('PaperCut', True, self.settings.font_color)
         self.textRect = self.text.get_rect()
         self.textRect.center = (self.settings.window_x // 2, self.settings.window_y // 4)
+        pg.mixer.init()
+        pg.mixer.music.load('sounds/background.ogg')
+        pg.mixer.music.set_volume(0.15)
+        pg.mixer.music.play()
 
     def select_option(self):
         for event in pg.event.get():
