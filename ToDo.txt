@@ -4,18 +4,33 @@ See examples to match card color and symbols
 
 Use piskelapp to draw art
 
-Tasks For Next Week ############################################################################################################
+Tasks ##########################################################################################################################
 - Sound Effects
 	When clicking on a card
 	When card attacks
 	When card dies
 	Background Music
 	When clicking on an option in the menu, play a sound
-- Health and attack bars next to player card and enemy cards
-- Create Enemy card class
+- Generate shadow when card is being dragged
+- Health and attack bars next to player card and enemy cards (Kenny)
+- Implement Enemy card class
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
 - When player is dragged onto enemy card, start progress bar and initiate fight
-- creat object card class and have them interact with player card (healing)
+	- May not implement progress bar and instead have them immediately fight
+- create object card class and have them interact with player card (healing)
+- Attack system (Andrew)
+	- Player health and damage goes down when he attacks
+	- Replenish health or damage by consuming certain cards
+- House can be interacted with to spawn milk and heal player (Andrew)
+	- Use progress bar when player interacts with house
+- Player can consume certain cards (Andrew)
+	- Milk replenish health
+		- Comes from the shack card
+	- Weapon cards replenish damage
+		- These cards have a chance to come from the goblin card
+		- House card will have a chance to spawn weapon cards
+- Scoreboard / Achievements
+
 Game ideas #####################################################################################################################
 - Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
 	- setting cards are interacted with to produce many of the replenishment items
