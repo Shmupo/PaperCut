@@ -28,6 +28,7 @@ class Cards:
         
         # for displaying description
         self.last_card_at_mouse = None
+        self.last_mouse_pos = None
         self.time_start = None
         self.counting = 0
         self.font = pg.font.Font('fonts/Pixeloid.ttf', 10)
@@ -73,13 +74,16 @@ class Cards:
                         card.highlight()
 
     # display card description if hovered over for more than 1 second
+    # TODO also compare with mouse position - do not display when moving mouse
     def display_description(self):
         card = self.card_at_mouse()
         if card == self.last_card_at_mouse and not self.counting:
             self.time_start = time.time();
             self.counting = True
         elif self.counting and card != None:
-            if card != self.last_card_at_mouse:
+            if self.last_mouse_pos == None: self.last_mouse_pos = pg.mouse.get_pos()
+            if card != self.last_card_at_mouse or self.last_mouse_pos != pg.mouse.get_pos():
+                self.last_mouse_pos = None
                 self.last_card_at_mouse = card
                 self.counting = False
                 self.time_start = None
@@ -87,16 +91,17 @@ class Cards:
                 text = self.font.render(card.description, True, (255, 255, 255), (0, 0, 0))
                 rect = text.get_rect()
                 rect.center = pg.mouse.get_pos()
-                rect.x += rect.width / 2 + 20
-                rect.y += 40
+                rect.x += rect.width / 2 + 25
+                rect.y += 25
                 self.game.screen.blit(text, rect)
         else: self.last_card_at_mouse = card
 
     # returns first card in update_list that the mouse is on that is not the card being dragged
+    # reads the update list in reverse
     def card_at_mouse(self):
-        for card in self.update_list:
+        for card in reversed(self.update_list):
             if type(card) == CardStack:
-                for card_in_stack in card.stack:
+                for card_in_stack in reversed(card.stack):
                     if card_in_stack.rect.collidepoint(pg.mouse.get_pos()) and card_in_stack != self.card_to_drag:
                         return card_in_stack
             else: 
@@ -105,12 +110,13 @@ class Cards:
         else: return None
 
     # detecting whether a card is dragged on another card to create a stack or add to existing stack
+    # target is the card being hovered over, card_to_drag is the dragged card
     def check_drag_card_on_card(self):
         target = self.card_at_mouse()
         if self.card_to_drag != None and type(self.card_to_drag) != CardStack:
-            if type(target) == CardStack:
+            if type(target) == CardStack and self.card_to_drag in target.accepted_cards:
                 target.add(self.card_to_drag)
-            elif target:
+            elif target and target.accepted_cards and self.card_to_drag in target.accepted_cards:
                 stack = CardStack(self.game, [target, self.card_to_drag])
                 self.update_list.remove(target)
                 self.update_list.remove(self.card_to_drag)

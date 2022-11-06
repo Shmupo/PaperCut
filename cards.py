@@ -48,25 +48,16 @@ class Card:
         
 
 class PlayerCard(Card):
-    def __init__(self, game, card_image, name, description, accepted_cards=None):
-        super().__init__(game, card_image, name, description, accepted_cards)
+    def __init__(self, game, card_image, name, description):
+        super().__init__(game, card_image, name, description)
         self.health = 10
         self.damage = 5
 
     def display_health(self):
-        font = pg.font.SysFont('Arial', 10)
-        text = font.render('Health: ' + self.health, 1, (0,0,0))
-        self.screen.blit(text, self.x, self.y)
-        # pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, width, self.health, 5))  graphic health bar
-        # update when health is improved or reduced
-        # max health
+        pass
 
     def display_attack(self):
-        font = pg.font.SysFont('Arial', 10)
-        text = font.render('Damage: ' + self.damage, 1, (0,0,0))
-        self.screen.blit(text, self.x, self.y+12)
-        # update when damage is increased or reduced
-        # max damage?
+        pass
 
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
@@ -93,33 +84,39 @@ class SettingCard(Card):
         self.card_size = self.settings.card_size
         self.bar_color = (0, 0, 255)
         self.duration = duration
-        self.start_time = time.time()
+        self.start_time = None
         self.time_progress = 0
-        self.progress_rect = pg.Rect(self.rect.x, self.rect.y + self.rect.height + 5, 0, 5)
+        self.progress_rect = pg.Rect(self.rect.x, self.rect.y - 10, 0, 5)
         self.active = False
 
     def progress_bar(self):
         self.progress_rect.x = self.rect.x
-        self.progress_rect.y = self.rect.y + self.rect.height+5
+        self.progress_rect.y = self.rect.y - 10
+      
+        if self.start_time == None: self.start_time = time.time()
         current_time = time.time()
 
         if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
-            self.progress_rect.width += + (self.rect.width / self.duration)
+            self.progress_rect.width += self.rect.width / self.duration
             self.time_progress += 1
         elif self.time_progress == self.duration: 
-            self.start_time = time.time()
+            self.start_time = None
             self.time_progress = 0
             self.trigger_event()
             self.progress_rect.width = 0
 
         pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
 
+    # activate the setting card
+    def activate(self, activate = True):
+        self.active = activate
+
     # spawns cards in event_cards into play
     def trigger_event(self):
         for card in self.event_cards:
             if type(card) is EnemyCard:
                 enemy_copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
-                enemy_copy.rect.center = self.rect.center
+                enemy_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
                 enemy_copy.rect.y += 20
                 self.game.cards.update_list.append(enemy_copy)
                 self.game.cards.all_cards.append(enemy_copy)
@@ -129,7 +126,6 @@ class SettingCard(Card):
         if self.active:
             self.progress_bar()
         self.draw()
-
 
 class ConsumableCard(Card):
     def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, event_cards = None):
