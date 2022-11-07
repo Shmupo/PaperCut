@@ -1,5 +1,6 @@
 import pygame as pg
 from cards import SettingCard
+from cards import ConsumableCard
 
 # cards is the Cards() object for card management
 # accepted cards are the same accepted cards of the base card of the stack , aka the first added card in stack[0]
@@ -64,6 +65,11 @@ class CardStack:
                 if card in self.accepted_cards:
                     activate = True
             self.base_card.activate(activate)
+                
+        if type(self.base_card) == ConsumableCard:
+            for card in self.stack:
+                if card in self.accepted_cards:
+                    self.base_card.consume(card)
 
     def update(self):
         # for testing

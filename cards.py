@@ -6,6 +6,7 @@ import time
 
 class Card:
     def __init__(self, game, card_image, name='Base Card', description='This is a base card', accepted_cards=None):
+        self.delete = False
         self.game = game
         self.settings = game.settings
         self.screen = self.game.screen
@@ -58,6 +59,10 @@ class PlayerCard(Card):
 
     def display_attack(self):
         pass
+
+    def update(self):
+        print("HEALTH:", self.health)
+        self.draw()
 
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
@@ -131,13 +136,21 @@ class ConsumableCard(Card):
     def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, event_cards = None):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
+        self.player_card = None
         self.health = 1
         self.attack = 1
 
-    def trigger_event(self):
-        self.consume()
-
-    def consume(self):
-        #restore health or attack
+    #restore health/attack of player
+    def consume(self,player_card):
+        self.player_card = player_card
+        self.player_card.health += self.health
+        self.player_card.damage += self.attack
+        #remove effect
+        self.health = 0
+        self.attack = 0
         #delete card
-        pass
+        self.delete = True
+    
+    def update(self):
+        super().update()
+        self.draw()
