@@ -55,14 +55,24 @@ class PlayerCard(Card):
         self.damage = 5
 
     def display_health(self):
-        pass
+        width = 5
+        red_bar_length = 0 # goes up as player card received damage
+        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-5, self.rect.y, width, 128)) # green bar
+        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-5, self.rect.y, width, red_bar_length)) # red bar
+        # place bar on the left side
 
     def display_attack(self):
-        pass
+        width = 5
+        blk_bar_length = 5 # goes up as player card received buff
+        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
+        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
+        # place bar o the right side
 
     def update(self):
         print("HEALTH:", self.health)
         self.draw()
+        self.display_health()
+        self.display_attack()
 
 class EnemyCard(Card):
     def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
@@ -154,3 +164,5 @@ class ConsumableCard(Card):
     def update(self):
         super().update()
         self.draw()
+ 
+        
