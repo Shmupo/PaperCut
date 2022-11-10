@@ -5,7 +5,7 @@ See examples to match card color and symbols
 Use piskelapp to draw art
 
 Tasks ##########################################################################################################################
-- Sound Effects
+- Sound Effects (Kunal)
 	When clicking on a card
 	When card attacks
 	When card dies

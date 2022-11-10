@@ -128,6 +128,7 @@ class Cards:
         if self.card_to_drag == None:
             for target in self.update_list:
                 if pg.mouse.get_pressed()[0]:
+                    pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                     # if target is a stack of cards, check if user wants to drag the bottom off
                     if type(target) == CardStack:
                         if target.stack[-1].rect.collidepoint(pg.mouse.get_pos()):
