@@ -5,7 +5,7 @@ See examples to match card color and symbols
 Use piskelapp to draw art
 
 Tasks ##########################################################################################################################
-- Sound Effects
+- Sound Effects (Kunal)
 	When clicking on a card
 	When card attacks
 	When card dies
@@ -17,16 +17,16 @@ Tasks ##########################################################################
 - When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
 - When player is dragged onto enemy card, start progress bar and initiate fight
 	- May not implement progress bar and instead have them immediately fight
-- create object card class and have them interact with player card (healing)
+- create object card class and have them interact with player card (Michael)
 - Attack system (Andrew)
 	- Player health and damage goes down when he attacks
 	- Replenish health or damage by consuming certain cards
 - House can be interacted with to spawn milk and heal player (Andrew)
 	- Use progress bar when player interacts with house
-- Player can consume certain cards (Andrew)
-	- Milk replenish health
+- Player can consume certain cards (Andrew/Michael)
+	- Milk replenish health(Michael)
 		- Comes from the shack card
-	- Weapon cards replenish damage
+	- Weapon cards replenish damage(Michael)
 		- These cards have a chance to come from the goblin card
 		- House card will have a chance to spawn weapon cards
 - Scoreboard / Achievements

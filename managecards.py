@@ -117,6 +117,7 @@ class Cards:
             if type(target) == CardStack and self.card_to_drag in target.accepted_cards:
                 target.add(self.card_to_drag)
             elif target and target.accepted_cards and self.card_to_drag in target.accepted_cards:
+                pg.mixer.Channel(1).play(pg.mixer.Sound("sounds/fight.mp3"))
                 stack = CardStack(self.game, [target, self.card_to_drag])
                 self.update_list.remove(target)
                 self.update_list.remove(self.card_to_drag)
@@ -131,11 +132,14 @@ class Cards:
                     # if target is a stack of cards, check if user wants to drag the bottom off
                     if type(target) == CardStack:
                         if target.stack[-1].rect.collidepoint(pg.mouse.get_pos()):
+                            pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                             target.remove_bottom()
                             self.card_to_drag = target.stack[-1]
                         elif target.rect.collidepoint(pg.mouse.get_pos()):
+                                pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                                 self.card_to_drag = target
                     elif target.rect.collidepoint(pg.mouse.get_pos()):
+                            pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                             self.card_to_drag = target
         # release mouse
         elif not pg.mouse.get_pressed()[0]: 

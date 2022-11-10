@@ -49,7 +49,7 @@ class Menu():
         self.textRect = self.text.get_rect()
         self.textRect.center = (self.settings.window_x // 2, self.settings.window_y // 4)
         pg.mixer.init()
-        pg.mixer.music.load('sounds/background.ogg')
+        pg.mixer.music.load('sounds/menu.ogg')
         pg.mixer.music.set_volume(0.15)
         pg.mixer.music.play()
 
@@ -94,19 +94,38 @@ class Menu():
             if(event.type == pg.MOUSEBUTTONUP):
                 x, y = pg.mouse.get_pos()
                 if self.ng_rect.collidepoint(x, y):
-                   self.new_game()
+                    self.new_game()
+                    pg.mixer.music.load('sounds/background.ogg')
+                    pg.mixer.music.play()
                 elif self.cont_rect.collidepoint(x, y):
                     self.load_save()
+                    pg.mixer.music.load('sounds/background.ogg')
+                    pg.mixer.music.play()
                 elif self.exit_rect.collidepoint(x, y):
                     self.exit_game()
+                
+
+
 
     def load_save(self):
+        click = pg.mixer.music.load("sounds/click.wav")
+        pg.mixer.music.set_volume(0.3)
+        pg.mixer.music.play()
+        pg.time.delay(500)
         self.running = False
 
     def new_game(self):
         self.running = False
+        pg.mixer.music.load("sounds/click.wav")
+        pg.mixer.music.set_volume(0.3)
+        pg.mixer.music.play()
+        pg.time.delay(500)
+
 
     def exit_game(self):
+        click = pg.mixer.music.load("sounds/click.wav")
+        pg.mixer.music.set_volume(0.3)
+        pg.mixer.music.play()
         pg.quit()
         quit()
 
