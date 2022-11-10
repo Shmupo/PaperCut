@@ -56,16 +56,16 @@ class PlayerCard(Card):
 
     def display_health(self):
         width = 5
-        red_bar_length = 0 # goes up as player card received damage
-        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-5, self.rect.y, width, 128)) # green bar
-        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-5, self.rect.y, width, red_bar_length)) # red bar
+        red_bar_length = 0 # damage received
+        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-10, self.rect.y, width, 128)) # green bar
+        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y, width, red_bar_length)) # red bar
         # place bar on the left side
 
     def display_attack(self):
         width = 5
-        blk_bar_length = 5 # goes up as player card received buff
-        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
-        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
+        blk_bar_length = self.damage
+        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x-5, self.rect.y, width, 128)) # white bar
+        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x-5, self.rect.y, width, blk_bar_length)) # black bar
         # place bar o the right side
 
     def update(self):
@@ -80,6 +80,26 @@ class EnemyCard(Card):
         self.health = health
         self.damage = damage
         self.highlight_color = (150, 0, 0)
+
+    def display_health(self):
+        width = 5
+        red_bar_length = 0 # damage received
+        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+101, self.rect.y, width, 128)) # green bar
+        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y, width, red_bar_length)) # red bar
+        # place bar on the left side
+
+    def display_attack(self):
+        width = 5
+        blk_bar_length = self.damage
+        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
+        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
+        # place bar o the right side
+
+    def update(self):
+        print("HEALTH:", self.health)
+        self.draw()
+        self.display_health()
+        self.display_attack()
 
 
 # event_card param : cards that are to be spawned upon trigger_event()
