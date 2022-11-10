@@ -94,13 +94,16 @@ class Menu():
             if(event.type == pg.MOUSEBUTTONUP):
                 x, y = pg.mouse.get_pos()
                 if self.ng_rect.collidepoint(x, y):
-                   self.new_game()
+                    self.new_game()
+                    pg.mixer.music.load('sounds/background.ogg')
+                    pg.mixer.music.play()
                 elif self.cont_rect.collidepoint(x, y):
                     self.load_save()
+                    pg.mixer.music.load('sounds/background.ogg')
+                    pg.mixer.music.play()
                 elif self.exit_rect.collidepoint(x, y):
                     self.exit_game()
-                pg.mixer.music.load('sounds/background.ogg')
-                pg.mixer.music.play()
+                
 
 
 
