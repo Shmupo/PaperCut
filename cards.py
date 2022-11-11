@@ -127,7 +127,7 @@ class EnemyCard(Card):
 # duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
-                 duration = 1, accepted_cards = None, event_cards = None, max_enemies = 3):
+                 duration = 1, accepted_cards = None, event_cards = None, max_enemies = 0, max_consumables = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         # list of cards that can interact with this card
         self.event_cards = event_cards
@@ -139,6 +139,8 @@ class SettingCard(Card):
         self.bar_color = (0, 0, 255)
         self.max_enemies = max_enemies
         self.enemies_made = 0
+        self.max_consumables = max_consumables
+        self.consumables_made = 0
         self.duration = duration
         self.start_time = None
         self.time_progress = 0
@@ -169,14 +171,20 @@ class SettingCard(Card):
 
     # spawns cards in event_cards into play
     def trigger_event(self):
+        copy = None
         for card in self.event_cards:
             if type(card) is EnemyCard and self.max_enemies > self.enemies_made:
-                enemy_copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
-                enemy_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
-                enemy_copy.rect.y += 20
-                self.game.cards.update_list.append(enemy_copy)
-                self.game.cards.all_cards.append(enemy_copy)
+                copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
                 self.enemies_made += 1
+            if type(card) is ConsumableCard and self.max_consumables > self.consumables_made:
+                copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+                self.consumables_made += 1
+
+            if copy:
+                copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
+                copy.rect.y += 20
+                self.game.cards.update_list.append(copy)
+                self.game.cards.all_cards.append(copy)
 
     def update(self):
         super().update()

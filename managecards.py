@@ -52,7 +52,7 @@ class Cards:
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
-                                      accepted_cards=[self.player_card], event_cards=[self.goblin_card])
+                                      accepted_cards=[self.player_card], event_cards=[self.goblin_card], max_enemies=3)
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
 
@@ -61,8 +61,13 @@ class Cards:
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
                                         accepted_cards=[self.player_card])
-        self.update_list.append(self.milk_card)
-        self.all_cards.append(self.milk_card)
+
+        self.house_image = pg.image.load('images/HouseCard.png')
+        self.house_image = pg.transform.scale(self.house_image, self.card_size)
+        self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
+                                      duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], max_consumables=1)
+        self.all_cards.append(self.house_card)
+        self.update_list.append(self.house_card)
 #################################################################################################################
 
     # when dragging a card, highlight all other cards that can be interacted with
