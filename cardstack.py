@@ -2,6 +2,8 @@ import pygame as pg
 from cards import SettingCard
 from cards import ConsumableCard
 from cards import EnemyCard
+from cards import PlayerCard
+from time import time
 
 # cards is the Cards() object for card management
 # accepted cards are the same accepted cards of the base card of the stack , aka the first added card in stack[0]
@@ -18,6 +20,8 @@ class CardStack:
         self.accepted_cards = stack[0].accepted_cards
         self.rect = pg.Rect(self.base_card.rect.x, self.base_card.rect.y, self.base_card.rect.width, self.y_offset)
         self.stack_size = 2
+        # used for fighting
+        self.start_time = None
 
     def highlight(self):
         for card in self.stack:
@@ -48,7 +52,7 @@ class CardStack:
     def add(self, card):
         self.cards.update_list.remove(card)
         self.stack.append(card)
-        self.rect.y += self.y_offset
+        self.rect.height += self.y_offset
         self.rect.clamp(card)
 
     # if only 1 card in stack, remove the CardStack object and put the single card into update list
@@ -67,20 +71,33 @@ class CardStack:
                     activate = True
             self.base_card.activate(activate)
         
-        if type(self.base_card) == ConsumableCard:
+        elif type(self.base_card) == ConsumableCard:
             for card in self.stack:
                 if card in self.accepted_cards:
                     self.base_card.consume(card)
 
         # if stack of enemy cards has player attached, fight
-        # TO DO - Add time to attack slower
-        if type(self.base_card) == EnemyCard:
-            if self.stack[-1] == self.cards.player_card:
-                self.stack[-2].attack(self.stack[-1])
+        # create a timer to slowly tick away damage/health
+        elif type(self.base_card) == EnemyCard:
+            if type(self.stack[-1]) == PlayerCard:
+                #self.player_fight()
+                pass
+
+    def player_fight(self):
+        if self.start_time == None: self.start_time = time.time()
+        if self.start_time - time.time() >= 1:
+            player = self.stack[-1]
+            self.start_time = None
+            player.health -= 1
+            player.damage -= 1
+            self.stack[-2].health -= 1
+            self.stack[-2].damage -= 1
+            
 
     def update(self):
         # for testing
         pg.draw.rect(self.cards.game.screen, (255, 255, 255), self.rect)
+        # END
         self.activate_cards()
         for card in self.stack:
             card.update()

@@ -43,16 +43,22 @@ class Cards:
 
         # used to create copies in cards.py
         self.goblin_image = pg.image.load('images/GoblinCard.png')
-        self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
+        self.goblin_image = pg.transform.scale(self.goblin_image, self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, name='Goblin', 
                                      description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.',
                                      accepted_cards=[self.player_card])
+
+        self.gobo_image = pg.image.load('images/GoboCard.png')
+        self.gobo_image = pg.transform.scale(self.gobo_image, self.card_size)
+        self.gobo_card = EnemyCard(self.game, self.gobo_image, name='Gobo', description='A meaner Goblin. He came prepared.', 
+                                   accepted_cards=[self.player_card], health=2, damage=2)
 
         self.shack_image = pg.image.load('images/ShackCard.png')
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
-                                      accepted_cards=[self.player_card], event_cards=[self.goblin_card], max_enemies=3)
+                                      accepted_cards=[self.player_card], event_cards=[self.gobo_card, self.goblin_card], 
+                                      event_spawn_chance=[.3, .7], max_enemies=3)
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
 
@@ -65,7 +71,7 @@ class Cards:
         self.house_image = pg.image.load('images/HouseCard.png')
         self.house_image = pg.transform.scale(self.house_image, self.card_size)
         self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
-                                      duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], max_consumables=1)
+                                      duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_consumables=2)
         self.all_cards.append(self.house_card)
         self.update_list.append(self.house_card)
 #################################################################################################################

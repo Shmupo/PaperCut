@@ -3,6 +3,7 @@
 
 import pygame as pg
 import time
+import random
 
 class Card:
     def __init__(self, game, card_image, name='Base Card', description='This is a base card', accepted_cards=None):
@@ -90,14 +91,6 @@ class EnemyCard(Card):
         pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
         # place bar o the right side
 
-    # cause enemy card to attack the entity, reducing this cards health and damage and that of the other card
-    # only attacks 1 point at a time
-    def attack(self, entity):
-        entity.health -= 1
-        entity.damage -= 1
-        self.damage -= 1
-        self.health -= 1
-
     # checks if card is dead or not
     def check_death(self):
         if self.health < 1:
@@ -110,7 +103,7 @@ class EnemyCard(Card):
     # when other goblin cards are made, add them to the accepted_cards list
     def update_accepted_cards(self):
         for card in self.game.cards.update_list:
-            if type(card) == EnemyCard and card.name == 'Goblin':
+            if type(card) == EnemyCard and card.name == self.name:
                 if card not in self.accepted_cards:
                     self.accepted_cards.append(card)
 
@@ -121,16 +114,18 @@ class EnemyCard(Card):
         self.display_attack()
 
 
-# event_card param : cards that are to be spawned upon trigger_event()
-#       only duplicates of these cards are created
+# event_card param : list of cards that are to be spawned upon trigger_event()
+#       only duplicates of these cards are created,
+# event_spawn_chance: list of percentages to spawn cards
 # accepted cards param : list of cards that can interact with this card
 # duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
-                 duration = 1, accepted_cards = None, event_cards = None, max_enemies = 0, max_consumables = 0):
+                 duration = 1, accepted_cards = None, event_cards = None, event_spawn_chance = None, max_enemies = 0, max_consumables = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         # list of cards that can interact with this card
         self.event_cards = event_cards
+        self.event_spawn_chance = event_spawn_chance
         self.rect.x = 100
         self.rect.y = 100
         self.game = game
@@ -169,22 +164,32 @@ class SettingCard(Card):
     def activate(self, activate = True):
         self.active = activate
 
-    # spawns cards in event_cards into play
-    def trigger_event(self):
-        copy = None
-        for card in self.event_cards:
-            if type(card) is EnemyCard and self.max_enemies > self.enemies_made:
-                copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
-                self.enemies_made += 1
-            if type(card) is ConsumableCard and self.max_consumables > self.consumables_made:
-                copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
-                self.consumables_made += 1
+    # runs the probabilites within event_spawn_chance and returns the card chosen
+    # make sure the card probabilities are ordered in ascending order
+    def choose_event(self):
+        roll = random.random()
+        for chance in self.event_spawn_chance:
+            if roll < chance:
+                return self.event_cards[self.event_spawn_chance.index(chance)]
+        else: return self.event_cards[-1]
 
-            if copy:
-                copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
-                copy.rect.y += 20
-                self.game.cards.update_list.append(copy)
-                self.game.cards.all_cards.append(copy)
+    # spawns cards in event_cards into play according to percent chances
+    def trigger_event(self):
+        card = self.choose_event()
+        copy = None
+            
+        if type(card) == EnemyCard and self.max_enemies > self.enemies_made:
+            copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+            self.enemies_made += 1
+        elif type(card) == ConsumableCard and self.max_consumables > self.consumables_made:
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+            self.consumables_made += 1
+
+        if copy:
+            copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
+            copy.rect.y += 20
+            self.game.cards.update_list.append(copy)
+            self.game.cards.all_cards.append(copy)
 
     def update(self):
         super().update()
