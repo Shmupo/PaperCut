@@ -44,20 +44,20 @@ class Cards:
         # used to create copies in cards.py
         self.goblin_image = pg.image.load('images/GoblinCard.png')
         self.goblin_image = pg.transform.scale(self.goblin_image, self.game.settings.card_size)
-        self.goblin_card = EnemyCard(self.game, self.goblin_image, name="Goblin", 
+        self.goblin_card = EnemyCard(self.game, self.goblin_image, name='Goblin', 
                                      description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.',
                                      accepted_cards=[self.player_card])
 
         self.shack_image = pg.image.load('images/ShackCard.png')
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
-                                      'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=5, 
+                                      'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
                                       accepted_cards=[self.player_card], event_cards=[self.goblin_card])
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
 
         self.milk_image = pg.image.load('images/MilkCard.png')
-        self.milk_image = pg.transform.scale(self.milk_image,self.card_size)
+        self.milk_image = pg.transform.scale(self.milk_image, self.card_size)
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
                                         accepted_cards=[self.player_card])
@@ -109,13 +109,20 @@ class Cards:
                         return card
         else: return None
 
+    # Return the stack if the card is currently in a stack
+    def is_in_stack(self, card):
+        for stack in self.update_list:
+            if type(stack) == CardStack:
+                if card in stack.stack: return stack
+        else: return None
+
     # detecting whether a card is dragged on another card to create a stack or add to existing stack
     # target is the card being hovered over, card_to_drag is the dragged card
     def check_drag_card_on_card(self):
         target = self.card_at_mouse()
         if self.card_to_drag != None and type(self.card_to_drag) != CardStack:
-            if type(target) == CardStack and self.card_to_drag in target.accepted_cards:
-                target.add(self.card_to_drag)
+            if self.is_in_stack(target) and self.card_to_drag in target.accepted_cards:
+                self.is_in_stack(target).add(self.card_to_drag)
             elif target and target.accepted_cards and self.card_to_drag in target.accepted_cards:
                 pg.mixer.Channel(1).play(pg.mixer.Sound("sounds/fight.mp3"))
                 stack = CardStack(self.game, [target, self.card_to_drag])
@@ -149,7 +156,7 @@ class Cards:
     def update(self):
         self.set_drag()
         self.highlight_accepted_cards()
-        #print(self.card_to_drag)
+        print(self.card_to_drag)
         
         # ensures only one card is being dragged at a time
         # put the card being drag to the back of the update list

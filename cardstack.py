@@ -1,6 +1,7 @@
 import pygame as pg
 from cards import SettingCard
 from cards import ConsumableCard
+from cards import EnemyCard
 
 # cards is the Cards() object for card management
 # accepted cards are the same accepted cards of the base card of the stack , aka the first added card in stack[0]
@@ -43,11 +44,11 @@ class CardStack:
         if len(self.stack) < 2:
             self.convert_to_card()
 
-    # adds card to stack, removing it from the update_list
+    # adds card to stack, removing it from the update_list and making the drag box bigger
     def add(self, card):
         self.cards.update_list.remove(card)
-        self.cards.append(card)
-        self.rect.y += card.rect.height
+        self.stack.append(card)
+        self.rect.y += self.y_offset
         self.rect.clamp(card)
 
     # if only 1 card in stack, remove the CardStack object and put the single card into update list
@@ -65,11 +66,17 @@ class CardStack:
                 if card in self.accepted_cards:
                     activate = True
             self.base_card.activate(activate)
-                
+        
         if type(self.base_card) == ConsumableCard:
             for card in self.stack:
                 if card in self.accepted_cards:
                     self.base_card.consume(card)
+
+        # if stack of enemy cards has player attached, fight
+        # TO DO - Add time to attack slower
+        if type(self.base_card) == EnemyCard:
+            if self.stack[-1] == self.cards.player_card:
+                self.stack[-2].attack(self.stack[-1])
 
     def update(self):
         # for testing

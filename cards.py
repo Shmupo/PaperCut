@@ -34,10 +34,6 @@ class Card:
             pg.draw.rect(self.screen, self.highlight_color, self.highlight_rect, border_radius=10)
         else: pg.draw.rect(self.screen, color, self.highlight_rect, border_radius=10)
 
-    # checks if the card was dropped on a target and if it is valid
-    def check_target(self):
-        pass
-
     def __repr__(self):
         return repr(str(type(self)) + ' ' + self.name + str(self.rect.center))
 
@@ -69,7 +65,6 @@ class PlayerCard(Card):
         # place bar o the right side
 
     def update(self):
-        print("HEALTH:", self.health)
         self.draw()
         self.display_health()
         self.display_attack()
@@ -95,8 +90,32 @@ class EnemyCard(Card):
         pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
         # place bar o the right side
 
+    # cause enemy card to attack the entity, reducing this cards health and damage and that of the other card
+    # only attacks 1 point at a time
+    def attack(self, entity):
+        entity.health -= 1
+        entity.damage -= 1
+        self.damage -= 1
+        self.health -= 1
+
+    # checks if card is dead or not
+    def check_death(self):
+        if self.health < 1:
+            for elem in self.game.cards.update_list:
+                if type(elem) != Card:
+                    if elem.is_in_stack(self):
+                        elem.stack.pop(self)
+
+
+    # when other goblin cards are made, add them to the accepted_cards list
+    def update_accepted_cards(self):
+        for card in self.game.cards.update_list:
+            if type(card) == EnemyCard and card.name == 'Goblin':
+                if card not in self.accepted_cards:
+                    self.accepted_cards.append(card)
+
     def update(self):
-        print("HEALTH:", self.health)
+        self.update_accepted_cards()
         self.draw()
         self.display_health()
         self.display_attack()
@@ -108,7 +127,7 @@ class EnemyCard(Card):
 # duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
-                 duration = 1, accepted_cards = None, event_cards = None):
+                 duration = 1, accepted_cards = None, event_cards = None, max_enemies = 3):
         super().__init__(game, card_image, name, description, accepted_cards)
         # list of cards that can interact with this card
         self.event_cards = event_cards
@@ -118,6 +137,8 @@ class SettingCard(Card):
         self.settings = game.settings
         self.card_size = self.settings.card_size
         self.bar_color = (0, 0, 255)
+        self.max_enemies = max_enemies
+        self.enemies_made = 0
         self.duration = duration
         self.start_time = None
         self.time_progress = 0
@@ -149,12 +170,13 @@ class SettingCard(Card):
     # spawns cards in event_cards into play
     def trigger_event(self):
         for card in self.event_cards:
-            if type(card) is EnemyCard:
+            if type(card) is EnemyCard and self.max_enemies > self.enemies_made:
                 enemy_copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
                 enemy_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
                 enemy_copy.rect.y += 20
                 self.game.cards.update_list.append(enemy_copy)
                 self.game.cards.all_cards.append(enemy_copy)
+                self.enemies_made += 1
 
     def update(self):
         super().update()
@@ -163,15 +185,14 @@ class SettingCard(Card):
         self.draw()
 
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, event_cards = None):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, attack = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
-        self.player_card = None
-        self.health = 1
-        self.attack = 1
+        self.health = health
+        self.attack = attack
 
     #restore health/attack of player
-    def consume(self,player_card):
+    def consume(self, player_card):
         self.player_card = player_card
         self.player_card.health += self.health
         self.player_card.damage += self.attack
