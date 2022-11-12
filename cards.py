@@ -55,14 +55,10 @@ class PlayerCard(Card):
         width = 3
         len = 9
         health = self.health
-        red_bar_length = 0 # damage received
         y_val = 118
         for i in range(0, health):
             pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-5, self.rect.y+y_val, width, len))
             y_val -= 13
-        #pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-10, self.rect.y, width, 128)) # green bar
-        #pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y, width, red_bar_length)) # red bar
-        # place bar on the left side
 
     def display_attack(self):
         width = 3
@@ -72,9 +68,6 @@ class PlayerCard(Card):
         for i in range(0, attack_point):
             pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y+y_val, width, len))
             y_val -= 13
-        #pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x-5, self.rect.y, width, 128)) # white bar
-        #pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x-5, self.rect.y, width, blk_bar_length)) # black bar
-        # place bar o the right side
 
     def update(self):
         self.draw()
@@ -96,9 +89,6 @@ class EnemyCard(Card):
         for i in range(0, health):
             pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+96, self.rect.y+y_val, width, len))
             y_val -= 13
-        #pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+101, self.rect.y, width, 128)) # green bar
-        #pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y, width, red_bar_length)) # red bar
-        # place bar on the left side
 
     def display_attack(self):
         width = 3
@@ -108,11 +98,6 @@ class EnemyCard(Card):
         for i in range(0, attack_point):
             pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y+y_val, width, len))
             y_val -= 13
-
-
-        #pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
-        #pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
-        # place bar o the right side
 
     # checks if card is dead or not
     def check_death(self):
