@@ -1,43 +1,28 @@
 Info ###########################################################################################################################
 Each card type (Player, Settings, Entity, Object) will need to be a child class of the base card class
 See examples to match card color and symbols
-
-Use piskelapp to draw art
-
 Tasks ##########################################################################################################################
 - Sound Effects (Kunal)
-	When clicking on a card
 	When card attacks
 	When card dies
-	Background Music
 	When clicking on an option in the menu, play a sound
-- Generate shadow when card is being dragged
-- Health and attack bars next to player card and enemy cards (Kenny)
-- Implement Enemy card class
-- When cards are attacking or interacting, display a progress bar below them and set an arbitrary timer for fight progress
+- Generate shadow when card is being dragged (Optional)
 - When player is dragged onto enemy card, start progress bar and initiate fight
 	- May not implement progress bar and instead have them immediately fight
-- create object card class and have them interact with player card (Michael)
 - Attack system (Andrew)
 	- Player health and damage goes down when he attacks
 	- Replenish health or damage by consuming certain cards
-- House can be interacted with to spawn milk and heal player (Andrew)
-	- Use progress bar when player interacts with house
 - Player can consume certain cards (Andrew/Michael)
 	- Milk replenish health(Michael)
 		- Comes from the shack card
-	- Weapon cards replenish damage(Michael)
-		- These cards have a chance to come from the goblin card
-		- House card will have a chance to spawn weapon cards
 - Scoreboard / Achievements
+	- Increment score whenever the player kills something
+	- Display score on the top of the screen
+- Save file system
+	- only one save file
+	- reset save file when new game is started
+- Game Over Screen
+	- reset save and produce game over screen when player health = 0
 
-Game ideas #####################################################################################################################
-- Designed like a 'consumer-based' game where the player will need to constantly eat and drink things to keep fighting
-	- setting cards are interacted with to produce many of the replenishment items
-	- the challenge will be that enemy cards can be on timers and may get stronger or activate an event over time
-	- player needs to balance producing items over attacking enemies
-	- npcs can be attacked for a quick bump in food/drinks, but remove the ability to interact with them
-- Player will have two bars along each side of the card, indicating health and damage
-	- damage bar can go down, will need to be replenished with items
-- Enemies may have these same bars or will have a value indicating how much damage and health they have
-	- Some enemies will stack their cards to become stronger over time
+*Since basic functionality is almost done, we need to set up the spawns and progression for all of the other cards we have but not yet put into the game
+	- There should be NPCs, more items, progression towards an end goal

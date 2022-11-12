@@ -30,6 +30,7 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
+                    quit()
             self.screen.blit(self.background, (0, 0))
                 # there is an image that is off-screen but is still loaded and
                 # needs to be switched with the current screen using pg.display.update
