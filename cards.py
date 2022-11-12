@@ -1,6 +1,7 @@
 # Classes for the different types of cards
 # Current card types : Object, Enemy, Player, Setting, NPC
 
+from pickletools import stackslice
 import pygame as pg
 import time
 import random
@@ -48,20 +49,37 @@ class Card:
 class PlayerCard(Card):
     def __init__(self, game, card_image, name, description):
         super().__init__(game, card_image, name, description)
+        self.max_health = 10
+        self.max_damage = 5
         self.health = 10
         self.damage = 10
 
-    def take_damage(self, damage):
-        if self.health - damage <= 0:
+    # player attacks the given card
+    def attack(self, card):
+        enemy_damage = card.damage
+        card.take_damage(self.damage)
+        if self.damage < 1: self.damage -= 1
+        
+        self.health -= enemy_damage
+        if self.health <= 0:
             self.health = 0
             self.die()
-        else:
-            self.health -= damage
 
-    def deal_damage(self, entity):
-        entity.take_damage(self.damage)
-        if self.damage != 1:
-            self.damage -= 1
+    # keeps health/damage stats within max boundaries
+    def consume_item(self, card):
+        if type(card) == ConsumableCard:
+            if self.health + card.health >= self.max_health:
+                self.health = 10
+            elif self.max_health + card.health <= 0:
+                self.health = 0
+                self.die()
+            else: self.health += card.health
+
+            if self.damage + card.damage >= self.max_damage:
+                self.damage = 10
+            elif self.damage + card.damage <= 1:
+                self.damage = 1
+            else: self.damage += card.damage
 
     # this is called whenever player health reaches 0
     def die(self):
@@ -98,11 +116,10 @@ class EnemyCard(Card):
         self.highlight_color = (150, 0, 0)
 
     def take_damage(self, damage):
-        if self.health - damage <= 0:
+        self.health -= damage
+        if self.health <= 0:
             self.health = 0
             self.die()
-        else:
-            self.health -= damage
 
     def display_health(self):
         width = 3
@@ -124,11 +141,10 @@ class EnemyCard(Card):
 
     # checks if card is dead or not
     def die(self):
-        for elem in self.game.cards.update_list:
-            if type(elem) != Card:
-                if elem.is_in_stack(self):
-                    elem.stack.pop(self)
-
+        card_stack = self.game.cards.is_in_stack(self)
+        card_stack.remove_card(self)
+        self.game.cards.all_cards.remove(self)
+        self.game.cards.update_list.remove(self)
 
     # when other goblin cards are made, add them to the accepted_cards list
     def update_accepted_cards(self):
@@ -234,16 +250,9 @@ class ConsumableCard(Card):
         self.health = health
         self.attack = attack
 
-    #restore health/attack of player
-    def consume(self, player_card):
-        self.player_card = player_card
-        self.player_card.health += self.health
-        self.player_card.damage += self.attack
-        #remove effect
-        self.health = 0
-        self.attack = 0
-        #delete card
-        self.delete = True
+    # remove this card from play
+    def consume(self):
+        pass
     
     def update(self):
         super().update()

@@ -41,14 +41,18 @@ class CardStack:
             card.rect.x = self.rect.x
             card.rect.y = self.rect.y + self.y_offset * self.stack.index(card)
 
-    # if the bottom card is dragged, remove it
-    def remove_bottom(self):
-        self.cards.update_list.append(self.stack[-1])
-        self.stack.pop()
+    # remove card from stack, change size of stack
+    def remove_card(self, card):
+        self.cards.update_list.append(card)
+        self.stack.remove(card)
         self.rect.y - self.game.settings.card_size[1]
 
         if len(self.stack) < 2:
             self.convert_to_card()
+
+    # remove the bottom card
+    def remove_bottom(self):
+        self.remove_card(self.stack[-1])
 
     # adds card to stack, removing it from the update_list and making the drag box bigger
     def add(self, card):
@@ -65,8 +69,8 @@ class CardStack:
     def convert_to_card(self):
         if type(self.base_card) == SettingCard:
             self.base_card.activate(False)
-        self.cards.update_list.insert(-1, self.base_card)
-        self.cards.update_list.pop(self.cards.update_list.index(self))
+        self.cards.update_list.insert(-1, self.stack[-1])
+        self.cards.update_list.remove(self)
 
     # activates the base card if an accepted card is attatched
     def activate_cards(self):
@@ -79,26 +83,23 @@ class CardStack:
         
         elif type(self.base_card) == ConsumableCard:
             for card in self.stack:
-                if card in self.accepted_cards:
-                    self.base_card.consume(card)
+                if type(self.stack[-1]) == PlayerCard:
+                    self.stack[-1].consume_item(self.stack[-2])
 
         # if stack of enemy cards has player attached, fight
         # create a timer to slowly tick away damage/health
         elif type(self.base_card) == EnemyCard:
             if type(self.stack[-1]) == PlayerCard:
-                #self.player_fight()
-                pass
+                self.player_fight()
 
+    # player attacks the enemy that is closest to the front every second
     def player_fight(self):
-        if self.start_time == None: self.start_time = time.time()
-        if self.start_time - time.time() >= 1:
+        if self.start_time == None: self.start_time = time()
+        else: print(self.start_time - time())
+        if time() - self.start_time >= 1:
             player = self.stack[-1]
+            player.attack(self.stack[-2])
             self.start_time = None
-            player.health -= 1
-            player.damage -= 1
-            self.stack[-2].health -= 1
-            self.stack[-2].damage -= 1
-            
 
     def update(self):
         # for testing
