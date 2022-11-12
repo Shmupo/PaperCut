@@ -52,20 +52,31 @@ class PlayerCard(Card):
     def __init__(self, game, card_image, name, description):
         super().__init__(game, card_image, name, description)
         self.health = 10
-        self.damage = 5
+        self.damage = 10
 
     def display_health(self):
-        width = 5
+        width = 3
+        len = 9
+        health = self.health
         red_bar_length = 0 # damage received
-        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-10, self.rect.y, width, 128)) # green bar
-        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y, width, red_bar_length)) # red bar
+        y_val = 118
+        for i in range(0, health):
+            pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-5, self.rect.y+y_val, width, len))
+            y_val -= 13
+        #pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-10, self.rect.y, width, 128)) # green bar
+        #pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y, width, red_bar_length)) # red bar
         # place bar on the left side
 
     def display_attack(self):
-        width = 5
-        blk_bar_length = self.damage
-        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x-5, self.rect.y, width, 128)) # white bar
-        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x-5, self.rect.y, width, blk_bar_length)) # black bar
+        width = 3
+        len = 9
+        attack_point = self.damage
+        y_val = 118
+        for i in range(0, attack_point):
+            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y+y_val, width, len))
+            y_val -= 13
+        #pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x-5, self.rect.y, width, 128)) # white bar
+        #pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x-5, self.rect.y, width, blk_bar_length)) # black bar
         # place bar o the right side
 
     def update(self):
@@ -82,17 +93,29 @@ class EnemyCard(Card):
         self.highlight_color = (150, 0, 0)
 
     def display_health(self):
-        width = 5
-        red_bar_length = 0 # damage received
-        pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+101, self.rect.y, width, 128)) # green bar
-        pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y, width, red_bar_length)) # red bar
+        width = 3
+        len = 9
+        health = self.health
+        y_val = 118
+        for i in range(0, health):
+            pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+96, self.rect.y+y_val, width, len))
+            y_val -= 13
+        #pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+101, self.rect.y, width, 128)) # green bar
+        #pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y, width, red_bar_length)) # red bar
         # place bar on the left side
 
     def display_attack(self):
-        width = 5
-        blk_bar_length = self.damage
-        pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
-        pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
+        width = 3
+        len = 9
+        attack_point = self.damage
+        y_val = 118
+        for i in range(0, attack_point):
+            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y+y_val, width, len))
+            y_val -= 13
+
+
+        #pg.draw.rect(self.screen, (255, 255, 255), (self.rect.x+96, self.rect.y, width, 128)) # white bar
+        #pg.draw.rect(self.screen, (0, 0, 0), (self.rect.x+96, self.rect.y, width, blk_bar_length)) # black bar
         # place bar o the right side
 
     def update(self):
