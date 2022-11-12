@@ -51,6 +51,22 @@ class PlayerCard(Card):
         self.health = 10
         self.damage = 10
 
+    def take_damage(self, damage):
+        if self.health - damage <= 0:
+            self.health = 0
+            self.die()
+        else:
+            self.health -= damage
+
+    def deal_damage(self, entity):
+        entity.take_damage(self.damage)
+        if self.damage != 1:
+            self.damage -= 1
+
+    # this is called whenever player health reaches 0
+    def die(self):
+        pass
+
     def display_health(self):
         width = 3
         len = 9
@@ -81,6 +97,13 @@ class EnemyCard(Card):
         self.damage = damage
         self.highlight_color = (150, 0, 0)
 
+    def take_damage(self, damage):
+        if self.health - damage <= 0:
+            self.health = 0
+            self.die()
+        else:
+            self.health -= damage
+
     def display_health(self):
         width = 3
         len = 9
@@ -100,12 +123,11 @@ class EnemyCard(Card):
             y_val -= 13
 
     # checks if card is dead or not
-    def check_death(self):
-        if self.health < 1:
-            for elem in self.game.cards.update_list:
-                if type(elem) != Card:
-                    if elem.is_in_stack(self):
-                        elem.stack.pop(self)
+    def die(self):
+        for elem in self.game.cards.update_list:
+            if type(elem) != Card:
+                if elem.is_in_stack(self):
+                    elem.stack.pop(self)
 
 
     # when other goblin cards are made, add them to the accepted_cards list

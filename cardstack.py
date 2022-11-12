@@ -20,6 +20,8 @@ class CardStack:
         self.accepted_cards = stack[0].accepted_cards
         self.rect = pg.Rect(self.base_card.rect.x, self.base_card.rect.y, self.base_card.rect.width, self.y_offset)
         self.stack_size = 2
+        self.health = 0
+        self.damage = 0
         # used for fighting
         self.start_time = None
 
@@ -54,6 +56,10 @@ class CardStack:
         self.stack.append(card)
         self.rect.height += self.y_offset
         self.rect.clamp(card)
+
+    def display_stats(self):
+        if type(self.base_card) == EnemyCard:
+            pass
 
     # if only 1 card in stack, remove the CardStack object and put the single card into update list
     def convert_to_card(self):
