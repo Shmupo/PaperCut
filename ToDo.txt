@@ -39,7 +39,7 @@ Tasks ##########################################################################
 - NPC class 
 	- probably will need a special class for these cards
 
-- When card is defeated, there should be a chance that it can drop stuff
+- When card is defeated, there should be a chance that it can drop stuff (Michael)
 	- Goblin card has a chance to drop a fork, knife, or spoon
 		- 20% it will drop ONLY 1 card, it will be one of the above
 	- The Gobo card has a 50% to drop another card that unlocks an extra setting that can spawn enemies
