@@ -109,7 +109,6 @@ class Menu():
 
     def load_save(self):
         click = pg.mixer.music.load("sounds/click.wav")
-        pg.mixer.music.set_volume(0.3)
         pg.mixer.music.play()
         pg.time.delay(500)
         self.running = False
@@ -117,14 +116,12 @@ class Menu():
     def new_game(self):
         self.running = False
         pg.mixer.music.load("sounds/click.wav")
-        pg.mixer.music.set_volume(0.3)
         pg.mixer.music.play()
         pg.time.delay(500)
 
 
     def exit_game(self):
         click = pg.mixer.music.load("sounds/click.wav")
-        pg.mixer.music.set_volume(0.3)
         pg.mixer.music.play()
         pg.quit()
         quit()
