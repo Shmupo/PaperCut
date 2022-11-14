@@ -244,15 +244,19 @@ class SettingCard(Card):
         self.draw()
 
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, attack = 0):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
         self.health = health
-        self.attack = attack
+        self.damage = damage
 
     # remove this card from play
-    def consume(self):
-        pass
+    def consumed(self):
+        card_stack = self.game.cards.is_in_stack(self)
+        card_stack.remove_card(self)
+        self.game.cards.all_cards.remove(self)
+        self.game.cards.update_list.remove(self)
+
     
     def update(self):
         super().update()
