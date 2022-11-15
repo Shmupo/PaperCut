@@ -80,6 +80,7 @@ class PlayerCard(Card):
             elif self.damage + card.damage <= 1:
                 self.damage = 1
             else: self.damage += card.damage
+            card.consumed()
 
     # this is called whenever player health reaches 0
     def die(self):
@@ -228,7 +229,7 @@ class SettingCard(Card):
             copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
             self.enemies_made += 1
         elif type(card) == ConsumableCard and self.max_consumables > self.consumables_made:
-            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
             self.consumables_made += 1
 
         if copy:
@@ -260,6 +261,4 @@ class ConsumableCard(Card):
     
     def update(self):
         super().update()
-        self.draw()
- 
-        
+        self.draw()     

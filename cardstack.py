@@ -84,7 +84,10 @@ class CardStack:
         elif type(self.base_card) == ConsumableCard:
             for card in self.stack:
                 if type(self.stack[-1]) == PlayerCard:
-                    self.stack[-1].consume_item(self.stack[-2])
+                            if self.start_time == None: self.start_time = time()
+                            else: print(self.start_time - time())
+                            if time() - self.start_time >= 1:
+                                self.stack[-1].consume_item(self.stack[-2])
 
         # if stack of enemy cards has player attached, fight
         # create a timer to slowly tick away damage/health

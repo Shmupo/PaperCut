@@ -66,7 +66,7 @@ class Cards:
         self.milk_image = pg.transform.scale(self.milk_image, self.card_size)
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
-                                        accepted_cards=[self.player_card])
+                                        accepted_cards=[self.player_card], health=1, damage=1)
 
         self.house_image = pg.image.load('images/HouseCard.png')
         self.house_image = pg.transform.scale(self.house_image, self.card_size)
