@@ -121,11 +121,11 @@ class EnemyCard(Card):
         for _ in range(self.damage):
             pg.draw.rect(self.screen, (0, 0, 255), (self.rect.x+106, self.rect.y+y_val, 6, 9))
             y_val -= 13
+        
         y_val = 118
         for _ in range(self.health):
             pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+98, self.rect.y+y_val, 6, 9))
             y_val -= 13
-        print(self.health)
 
     # checks if card is dead or not
     def die(self):

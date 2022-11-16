@@ -95,7 +95,6 @@ class CardStack:
     # player attacks the enemy that is closest to the front every second
     def player_fight(self):
         if self.start_time == None: self.start_time = time()
-        else: print(self.start_time - time())
         if time() - self.start_time >= 1:
             player = self.stack[-1]
             player.attack(self.stack[-2])
@@ -110,12 +109,14 @@ class CardStack:
         # for testing
         pg.draw.rect(self.cards.game.screen, (255, 255, 255), self.rect)
         # END
+
+        if type(self.stack[-1]) == EnemyCard: self.stack[-1].display_stats()
+        elif type(self.stack[-2]) == EnemyCard: self.stack[-2].display_stats()
+
         self.activate_cards()
+
         for card in self.stack:
             card.update()
-            
-            if type(self.stack[-1]) == EnemyCard: self.stack[-1].display_stats()
-            elif type(self.stack[-2]) == EnemyCard: self.stack[-2].display_stats()
             
             if card != self.stack[0]:
                 self.align_stack()
