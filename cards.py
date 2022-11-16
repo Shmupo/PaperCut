@@ -76,7 +76,7 @@ class PlayerCard(Card):
             else: self.health += card.health
 
             if self.damage + card.damage >= self.max_damage:
-                self.damage = 10
+                self.damage = 5
             elif self.damage + card.damage <= 1:
                 self.damage = 1
             else: self.damage += card.damage
