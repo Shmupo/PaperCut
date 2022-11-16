@@ -66,7 +66,7 @@ class Cards:
         self.milk_image = pg.transform.scale(self.milk_image, self.card_size)
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
-                                        accepted_cards=[self.player_card])
+                                        accepted_cards=[self.player_card], health=1, damage=1)
 
         self.house_image = pg.image.load('images/HouseCard.png')
         self.house_image = pg.transform.scale(self.house_image, self.card_size)
@@ -143,18 +143,19 @@ class Cards:
 
     # sets the card to drag
     def set_drag(self):
+        pg.mixer.Channel(0).set_volume(0.2)
         # if there is no card being dragged, drag one if mouse is on a card
         if self.card_to_drag == None:
             for target in self.update_list:
                 if pg.mouse.get_pressed()[0]:
                     # if target is a stack of cards, check if user wants to drag the bottom off
                     if type(target) == CardStack:
+                        soundClick = pg.mixer.Sound("sounds/select.wav")
+                        pg.mixer.Channel(0).play(soundClick)
                         if target.stack[-1].rect.collidepoint(pg.mouse.get_pos()):
-                            pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                             target.remove_bottom()
                             self.card_to_drag = target.stack[-1]
                         elif target.rect.collidepoint(pg.mouse.get_pos()):
-                                pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                                 self.card_to_drag = target
                     elif target.rect.collidepoint(pg.mouse.get_pos()):
                             pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
