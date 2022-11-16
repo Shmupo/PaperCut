@@ -52,13 +52,13 @@ class PlayerCard(Card):
         self.max_health = 10
         self.max_damage = 5
         self.health = 10
-        self.damage = 10
+        self.damage = 5
 
     # player attacks the given card
     def attack(self, card):
         enemy_damage = card.damage
         card.take_damage(self.damage)
-        if self.damage < 1: self.damage -= 1
+        if self.damage > 1: self.damage -= 1
         
         self.health -= enemy_damage
         if self.health <= 0:
@@ -80,28 +80,21 @@ class PlayerCard(Card):
             elif self.damage + card.damage <= 1:
                 self.damage = 1
             else: self.damage += card.damage
-            card.consumed()
 
     # this is called whenever player health reaches 0
     def die(self):
         pass
 
     def display_health(self):
-        width = 3
-        len = 9
-        health = self.health
         y_val = 118
-        for i in range(0, health):
-            pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x-5, self.rect.y+y_val, width, len))
+        for _ in range(self.health):
+            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-8, self.rect.y+y_val, 6, 9))
             y_val -= 13
 
     def display_attack(self):
-        width = 3
-        len = 9
-        attack_point = self.damage
         y_val = 118
-        for i in range(0, attack_point):
-            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x-10, self.rect.y+y_val, width, len))
+        for _ in range(self.damage):
+            pg.draw.rect(self.screen, (0, 0, 255), (self.rect.x-16, self.rect.y+y_val, 6, 9))
             y_val -= 13
 
     def update(self):
@@ -109,11 +102,12 @@ class PlayerCard(Card):
         self.display_health()
         self.display_attack()
 
+
 class EnemyCard(Card):
-    def __init__(self, game, card_image, name='Enemy Card', description='This is an enemy card', accepted_cards=None, health = 1, damage = 1): 
+    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description): 
         super().__init__(game, card_image, name, description, accepted_cards)
-        self.health = health
-        self.damage = damage
+        self.health = hp
+        self.damage = dmg
         self.highlight_color = (150, 0, 0)
 
     def take_damage(self, damage):
@@ -122,23 +116,16 @@ class EnemyCard(Card):
             self.health = 0
             self.die()
 
-    def display_health(self):
-        width = 3
-        len = 9
-        health = self.health
+    def display_stats(self):
         y_val = 118
-        for i in range(0, health):
-            pg.draw.rect(self.screen, (0, 255, 0), (self.rect.x+96, self.rect.y+y_val, width, len))
+        for _ in range(self.damage):
+            pg.draw.rect(self.screen, (0, 0, 255), (self.rect.x+106, self.rect.y+y_val, 6, 9))
             y_val -= 13
-
-    def display_attack(self):
-        width = 3
-        len = 9
-        attack_point = self.damage
         y_val = 118
-        for i in range(0, attack_point):
-            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+101, self.rect.y+y_val, width, len))
+        for _ in range(self.health):
+            pg.draw.rect(self.screen, (255, 0, 0), (self.rect.x+98, self.rect.y+y_val, 6, 9))
             y_val -= 13
+        print(self.health)
 
     # checks if card is dead or not
     def die(self):
@@ -157,8 +144,6 @@ class EnemyCard(Card):
     def update(self):
         self.update_accepted_cards()
         self.draw()
-        self.display_health()
-        self.display_attack()
 
 
 # event_card param : list of cards that are to be spawned upon trigger_event()
@@ -190,22 +175,27 @@ class SettingCard(Card):
         self.active = False
 
     def progress_bar(self):
-        self.progress_rect.x = self.rect.x
-        self.progress_rect.y = self.rect.y - 10
-      
-        if self.start_time == None: self.start_time = time.time()
-        current_time = time.time()
-
-        if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
-            self.progress_rect.width += self.rect.width / self.duration
-            self.time_progress += 1
-        elif self.time_progress == self.duration: 
-            self.start_time = None
+        if self.active == False and self.time_progress != 0: 
             self.time_progress = 0
-            self.trigger_event()
+            self.start_time = None
             self.progress_rect.width = 0
+        elif self.active: 
+            self.progress_rect.x = self.rect.x
+            self.progress_rect.y = self.rect.y - 10
+  
+            if self.start_time == None: self.start_time = time.time()
+            current_time = time.time()
 
-        pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
+            if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
+                self.progress_rect.width += self.rect.width / self.duration
+                self.time_progress += 1
+            elif self.time_progress == self.duration: 
+                self.start_time = None
+                self.time_progress = 0
+                self.trigger_event()
+                self.progress_rect.width = 0
+
+            pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
 
     # activate the setting card
     def activate(self, activate = True):
@@ -226,10 +216,10 @@ class SettingCard(Card):
         copy = None
             
         if type(card) == EnemyCard and self.max_enemies > self.enemies_made:
-            copy = EnemyCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+            copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, card.description)
             self.enemies_made += 1
         elif type(card) == ConsumableCard and self.max_consumables > self.consumables_made:
-            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
             self.consumables_made += 1
 
         if copy:
@@ -240,25 +230,23 @@ class SettingCard(Card):
 
     def update(self):
         super().update()
-        if self.active:
-            self.progress_bar()
+        self.progress_bar()
         self.draw()
 
+
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, attack = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
         self.health = health
-        self.damage = damage
+        self.attack = attack
 
     # remove this card from play
-    def consumed(self):
-        card_stack = self.game.cards.is_in_stack(self)
-        card_stack.remove_card(self)
-        self.game.cards.all_cards.remove(self)
-        self.game.cards.update_list.remove(self)
-
+    def consume(self):
+        pass
     
     def update(self):
         super().update()
-        self.draw()     
+        self.draw()
+ 
+        

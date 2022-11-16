@@ -40,33 +40,35 @@ class Cards:
                                 'Your best friend was a magical beetle. Now you wear his skull so that he is always with you. Rest in peace Moe.')
         self.update_list.append(self.player_card)
         self.all_cards.append(self.player_card)
+        self.player_card.rect.x = 150
+        self.player_card.rect.y = 350
 
         # used to create copies in cards.py
         self.goblin_image = pg.image.load('images/GoblinCard.png')
         self.goblin_image = pg.transform.scale(self.goblin_image, self.card_size)
-        self.goblin_card = EnemyCard(self.game, self.goblin_image, name='Goblin', 
-                                     description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.',
-                                     accepted_cards=[self.player_card])
+        self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
+                                     description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.')
 
         self.gobo_image = pg.image.load('images/GoboCard.png')
         self.gobo_image = pg.transform.scale(self.gobo_image, self.card_size)
-        self.gobo_card = EnemyCard(self.game, self.gobo_image, name='Gobo', description='A meaner Goblin. He came prepared.', 
-                                   accepted_cards=[self.player_card], health=2, damage=2)
+        self.gobo_card = EnemyCard(self.game, self.gobo_image, hp=2, dmg=3, accepted_cards=[self.player_card], name='Gobo', description='A meaner Goblin. He came prepared.')
 
         self.shack_image = pg.image.load('images/ShackCard.png')
         self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
                                       accepted_cards=[self.player_card], event_cards=[self.gobo_card, self.goblin_card], 
-                                      event_spawn_chance=[.3, .7], max_enemies=3)
+                                      event_spawn_chance=[.3, .7], max_enemies=5)
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
+        self.shack_card.rect.x = 800
+        self.shack_card.rect.y = 350
 
         self.milk_image = pg.image.load('images/MilkCard.png')
         self.milk_image = pg.transform.scale(self.milk_image, self.card_size)
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
-                                        accepted_cards=[self.player_card], health=1, damage=1)
+                                        accepted_cards=[self.player_card])
 
         self.house_image = pg.image.load('images/HouseCard.png')
         self.house_image = pg.transform.scale(self.house_image, self.card_size)
@@ -74,6 +76,8 @@ class Cards:
                                       duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_consumables=2)
         self.all_cards.append(self.house_card)
         self.update_list.append(self.house_card)
+        self.house_card.rect.x = 250
+        self.house_card.rect.y = 350
 #################################################################################################################
 
     # when dragging a card, highlight all other cards that can be interacted with
@@ -143,19 +147,18 @@ class Cards:
 
     # sets the card to drag
     def set_drag(self):
-        pg.mixer.Channel(0).set_volume(0.2)
         # if there is no card being dragged, drag one if mouse is on a card
         if self.card_to_drag == None:
             for target in self.update_list:
                 if pg.mouse.get_pressed()[0]:
                     # if target is a stack of cards, check if user wants to drag the bottom off
                     if type(target) == CardStack:
-                        soundClick = pg.mixer.Sound("sounds/select.wav")
-                        pg.mixer.Channel(0).play(soundClick)
                         if target.stack[-1].rect.collidepoint(pg.mouse.get_pos()):
+                            pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                             target.remove_bottom()
                             self.card_to_drag = target.stack[-1]
                         elif target.rect.collidepoint(pg.mouse.get_pos()):
+                                pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
                                 self.card_to_drag = target
                     elif target.rect.collidepoint(pg.mouse.get_pos()):
                             pg.mixer.Channel(0).play(pg.mixer.Sound("sounds/select.wav"))
@@ -168,7 +171,7 @@ class Cards:
     def update(self):
         self.set_drag()
         self.highlight_accepted_cards()
-        print(self.card_to_drag)
+        #print(self.card_to_drag)
         
         # ensures only one card is being dragged at a time
         # put the card being drag to the back of the update list
@@ -187,6 +190,7 @@ class Cards:
                 
         for card in self.update_list:
             card.update()
+            if type(card) == EnemyCard: card.display_stats()
             
         self.display_description()
         #print(self.last_card_at_mouse)

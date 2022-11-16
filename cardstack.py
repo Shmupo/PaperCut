@@ -84,10 +84,7 @@ class CardStack:
         elif type(self.base_card) == ConsumableCard:
             for card in self.stack:
                 if type(self.stack[-1]) == PlayerCard:
-                            if self.start_time == None: self.start_time = time()
-                            else: print(self.start_time - time())
-                            if time() - self.start_time >= 1:
-                                self.stack[-1].consume_item(self.stack[-2])
+                    self.stack[-1].consume_item(self.stack[-2])
 
         # if stack of enemy cards has player attached, fight
         # create a timer to slowly tick away damage/health
@@ -104,6 +101,11 @@ class CardStack:
             player.attack(self.stack[-2])
             self.start_time = None
 
+    # display how many cards are in this stack ex. 'X2' in the top right corner of the stack
+    # only display if this is a stack consisting of the same cards, then display how many of the same card there are
+    def display_count(self):
+        pass
+
     def update(self):
         # for testing
         pg.draw.rect(self.cards.game.screen, (255, 255, 255), self.rect)
@@ -111,5 +113,9 @@ class CardStack:
         self.activate_cards()
         for card in self.stack:
             card.update()
+            
+            if type(self.stack[-1]) == EnemyCard: self.stack[-1].display_stats()
+            elif type(self.stack[-2]) == EnemyCard: self.stack[-2].display_stats()
+            
             if card != self.stack[0]:
                 self.align_stack()
