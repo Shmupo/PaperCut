@@ -58,7 +58,7 @@ class Cards:
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
                                       accepted_cards=[self.player_card], event_cards=[self.gobo_card, self.goblin_card], 
-                                      event_spawn_chance=[.3, .7], max_enemies=5)
+                                      event_spawn_chance=[.3, .7], max_card_spawns=5)
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
         self.shack_card.rect.x = 800
@@ -73,7 +73,7 @@ class Cards:
         self.house_image = pg.image.load('images/HouseCard.png')
         self.house_image = pg.transform.scale(self.house_image, self.card_size)
         self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
-                                      duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_consumables=2)
+                                      duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_card_spawns=2)
         self.all_cards.append(self.house_card)
         self.update_list.append(self.house_card)
         self.house_card.rect.x = 250

@@ -104,11 +104,13 @@ class PlayerCard(Card):
 
 
 class EnemyCard(Card):
-    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description): 
+    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description, loot_drop_chance=None, loot_cards=None): 
         super().__init__(game, card_image, name, description, accepted_cards)
         self.health = hp
         self.damage = dmg
         self.highlight_color = (150, 0, 0)
+        self.loot_drop_chance = loot_drop_chance
+        self.loot_cards = loot_cards
 
     def take_damage(self, damage):
         self.health -= damage
@@ -129,10 +131,33 @@ class EnemyCard(Card):
 
     # checks if card is dead or not
     def die(self):
+        self.drop_loot()
         card_stack = self.game.cards.is_in_stack(self)
         card_stack.remove_card(self)
         self.game.cards.all_cards.remove(self)
         self.game.cards.update_list.remove(self)
+
+    # chooses a loot card to drop based on probabilities
+    # return None when no card is chosen
+    def choose_loot(self):
+        if self.loot_cards != None:
+            for card in self.loot_cards:
+                roll = random.random()
+                if roll < self.loot_drop_chance[self.loot_cards.index(card)]:
+                    return card
+            else: return None
+        else: return None
+
+    def drop_loot(self):
+        card = self.choose_loot()
+        if card != None:
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
+
+            copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
+            copy.rect.y += 20
+            self.game.cards.update_list.append(copy)
+            self.game.cards.all_cards.append(copy)
+            self.spawned_cards.append(copy)
 
     # when other goblin cards are made, add them to the accepted_cards list
     def update_accepted_cards(self):
@@ -153,7 +178,7 @@ class EnemyCard(Card):
 # duration param : seconds to run progress bar
 class SettingCard(Card):
     def __init__(self, game ,card_image, name='Setting Card', description='This is a setting card', 
-                 duration = 1, accepted_cards = None, event_cards = None, event_spawn_chance = None, max_enemies = 0, max_consumables = 0):
+                 duration = 1, accepted_cards = None, event_cards = None, event_spawn_chance = None, max_card_spawns=0):
         super().__init__(game, card_image, name, description, accepted_cards)
         # list of cards that can interact with this card
         self.event_cards = event_cards
@@ -164,10 +189,8 @@ class SettingCard(Card):
         self.settings = game.settings
         self.card_size = self.settings.card_size
         self.bar_color = (0, 0, 255)
-        self.max_enemies = max_enemies
-        self.enemies_made = 0
-        self.max_consumables = max_consumables
-        self.consumables_made = 0
+        self.max_card_spawns = max_card_spawns
+        self.spawned_cards = []
         self.duration = duration
         self.start_time = None
         self.time_progress = 0
@@ -186,14 +209,18 @@ class SettingCard(Card):
             if self.start_time == None: self.start_time = time.time()
             current_time = time.time()
 
-            if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
-                self.progress_rect.width += self.rect.width / self.duration
-                self.time_progress += 1
-            elif self.time_progress == self.duration: 
+            if self.max_card_spawns > len(self.spawned_cards):
+                if current_time - self.start_time > self.time_progress and self.time_progress < self.duration:
+                    self.progress_rect.width += self.rect.width / self.duration
+                    self.time_progress += 1
+                elif self.time_progress == self.duration: 
+                    self.start_time = None
+                    self.time_progress = 0
+                    self.trigger_event()
+                    self.progress_rect.width = 0
+            else: 
+                self.active = False
                 self.start_time = None
-                self.time_progress = 0
-                self.trigger_event()
-                self.progress_rect.width = 0
 
             pg.draw.rect(self.screen, self.bar_color, self.progress_rect, 5)
 
@@ -215,22 +242,29 @@ class SettingCard(Card):
         card = self.choose_event()
         copy = None
             
-        if type(card) == EnemyCard and self.max_enemies > self.enemies_made:
-            copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, card.description)
-            self.enemies_made += 1
-        elif type(card) == ConsumableCard and self.max_consumables > self.consumables_made:
-            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
-            self.consumables_made += 1
+        if self.max_card_spawns > len(self.spawned_cards):
+            if type(card) == EnemyCard:
+                copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, card.description)
+            elif type(card) == ConsumableCard:
+                copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
 
         if copy:
             copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
             copy.rect.y += 20
             self.game.cards.update_list.append(copy)
             self.game.cards.all_cards.append(copy)
+            self.spawned_cards.append(copy)
+
+    # keeps track of whether the cards spawned are despawned or not
+    def check_spawned_cards(self):
+        for card in self.spawned_cards:
+            if card not in self.game.cards.update_list or self.game.cards.is_in_stack(card):
+                self.spawned_cards.remove(card)
 
     def update(self):
         super().update()
         self.progress_bar()
+        self.check_spawned_cards()
         self.draw()
 
 
