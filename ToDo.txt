@@ -50,7 +50,6 @@ Tasks ##########################################################################
 		- these cards can give the pkayer 1 attack or can be traded with the Moff card for something better
 	- some sort of boss card
 		- maybe spawn this card after 5 minutes?
-	- At least 1 more setting card that spawns a different type of enemy card
 	- object cards that the player can consume for health and damage points
 		- Moff can spawn a Moff egg, gives the player 2 health and 1 damage
 	- some sort of 'key' card that 'gobo' drops
