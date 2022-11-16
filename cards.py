@@ -80,7 +80,7 @@ class PlayerCard(Card):
             elif self.damage + card.damage <= 1:
                 self.damage = 1
             else: self.damage += card.damage
-
+            card.consumed()
     # this is called whenever player health reaches 0
     def die(self):
         pass
@@ -219,7 +219,7 @@ class SettingCard(Card):
             copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, card.description)
             self.enemies_made += 1
         elif type(card) == ConsumableCard and self.max_consumables > self.consumables_made:
-            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards)
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
             self.consumables_made += 1
 
         if copy:
@@ -235,15 +235,18 @@ class SettingCard(Card):
 
 
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, attack = 0):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
         self.health = health
-        self.attack = attack
+        self.damage = damage
 
     # remove this card from play
-    def consume(self):
-        pass
+    def consumed(self):
+        card_stack = self.game.cards.is_in_stack(self)
+        card_stack.remove_card(self)
+        self.game.cards.all_cards.remove(self)
+        self.game.cards.update_list.remove(self)
     
     def update(self):
         super().update()
