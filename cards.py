@@ -97,10 +97,20 @@ class PlayerCard(Card):
             pg.draw.rect(self.screen, (0, 0, 255), (self.rect.x-16, self.rect.y+y_val, 6, 9))
             y_val -= 13
 
+    def display_score(self):
+        score = 0
+        x_pos = 800
+        y_pos = 10
+        comicsans = pg.font.SysFont('comicsans', 30, True)
+        text = comicsans.render('High Score: ' + str(score), 1, (0, 0, 0))
+        self.screen.blit(text, (x_pos, y_pos))
+
+
     def update(self):
         self.draw()
         self.display_health()
         self.display_attack()
+        self.display_score()
 
 
 class EnemyCard(Card):
