@@ -34,8 +34,7 @@ class Cards:
         self.font = pg.font.Font('fonts/Pixeloid.ttf', 10)
 
 # CREATE CARDS HERE #############################################################################################
-        self.card_image = pg.image.load('images/playercard.png')
-        self.card_image = pg.transform.scale(self.card_image, self.card_size)
+        self.card_image = pg.transform.scale(pg.image.load('images/playercard.png'), self.card_size)
         self.player_card = PlayerCard(self.game, self.card_image, 'Player', 
                                 'Your best friend was a magical beetle. Now you wear his skull so that he is always with you. Rest in peace Moe.')
         self.update_list.append(self.player_card)
@@ -43,35 +42,49 @@ class Cards:
         self.player_card.rect.x = 150
         self.player_card.rect.y = 350
 
-        # used to create copies in cards.py
-        self.goblin_image = pg.image.load('images/GoblinCard.png')
-        self.goblin_image = pg.transform.scale(self.goblin_image, self.card_size)
+        self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
                                      description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.')
 
-        self.gobo_image = pg.image.load('images/GoboCard.png')
-        self.gobo_image = pg.transform.scale(self.gobo_image, self.card_size)
+        self.gobo_image = pg.transform.scale(pg.image.load('images/GoboCard.png'), self.card_size)
         self.gobo_card = EnemyCard(self.game, self.gobo_image, hp=2, dmg=3, accepted_cards=[self.player_card], name='Gobo', description='A meaner Goblin. He came prepared.')
 
-        self.shack_image = pg.image.load('images/ShackCard.png')
-        self.shack_image = pg.transform.scale(self.shack_image, self.card_size)
+        self.dwarf_image = pg.transform.scale(pg.image.load('images/DwarfCard.png'), self.card_size)
+        self.dwarf_card = EnemyCard(self.game, self.dwarf_image, hp=4, dmg= 2, accepted_cards=[self.player_card], name='Dwarf', description='He works hard. Or is is a she?')
+
+        self.shack_image = pg.transform.scale(pg.image.load('images/ShackCard.png'), self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
                                       accepted_cards=[self.player_card], event_cards=[self.gobo_card, self.goblin_card], 
-                                      event_spawn_chance=[.3, .7], max_card_spawns=5)
+                                      event_spawn_chance=[.3, .7], max_card_spawns=3)
         self.update_list.append(self.shack_card)
         self.all_cards.append(self.shack_card)
         self.shack_card.rect.x = 800
         self.shack_card.rect.y = 350
 
-        self.milk_image = pg.image.load('images/MilkCard.png')
-        self.milk_image = pg.transform.scale(self.milk_image, self.card_size)
+        self.mountain_image = pg.transform.scale(pg.image.load('images/MountainCard.png'), self.card_size)
+        self.mountain_card = SettingCard(self.game, self.mountain_image, 'Mountain', 
+                                      'Something grumbly lurks inside.', duration=5, 
+                                      accepted_cards=[self.player_card], event_cards=[self.dwarf_card], 
+                                      event_spawn_chance=[1], max_card_spawns=5)
+
+        self.milk_image = pg.transform.scale(pg.image.load('images/MilkCard.png'), self.card_size)
         self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
                                         description='Nothing like having a carton of milk after a hard days work.',
                                         accepted_cards=[self.player_card], health=1,damage=1)
 
-        self.house_image = pg.image.load('images/HouseCard.png')
-        self.house_image = pg.transform.scale(self.house_image, self.card_size)
+        # Need to implement NPCs
+        self.shoe_image = pg.transform.scale(pg.image.load('images/ShoeCard.png'), self.card_size)
+        #self.shoe_card = ConsumableCard(self.game, self.shoe_image, 'Shoe',
+        #                                description='Comes with a free snake. He has a hat.',
+        #                                accepted_cards=[self.shoes_card])
+
+        self.egg_image = pg.transform.scale(pg.image.load('images/EggCard.png'), self.card_size)
+        self.egg_card = ConsumableCard(self.game, self.egg_image, 'Egg',
+                                        description='Don\'t ask where it came from.',
+                                        accepted_cards=[self.player_card], health=3,damage=2)
+
+        self.house_image = pg.transform.scale(pg.image.load('images/HouseCard.png'), self.card_size)
         self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
                                       duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_card_spawns=2)
         self.all_cards.append(self.house_card)

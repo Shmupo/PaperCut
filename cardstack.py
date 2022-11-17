@@ -85,7 +85,6 @@ class CardStack:
             for card in self.stack:
                 if type(self.stack[-1]) == PlayerCard:
                     if self.start_time == None: self.start_time = time()
-                    else: print(self.start_time - time())
                     if time() - self.start_time >= 1:
                         self.stack[-1].consume_item(self.stack[-2])
 

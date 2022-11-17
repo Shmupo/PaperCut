@@ -266,6 +266,7 @@ class SettingCard(Card):
         self.progress_bar()
         self.check_spawned_cards()
         self.draw()
+        print(len(self.spawned_cards))
 
 
 class ConsumableCard(Card):
