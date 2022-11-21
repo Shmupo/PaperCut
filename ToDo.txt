@@ -7,12 +7,6 @@ Tasks ##########################################################################
 	- When card dies
 	- When clicking on an option in the menu, play a sound
 
-- We all need to do testing because quite of bit of the things already there do not work correctly
-
-- Attack system (Andrew)
-	- Player health and damage goes down when he attacks
-	- Replenish health or damage by consuming certain cards
-
 - Player can consume certain cards (Andrew/Michael)
 	- Doesn't work completely yet
 	- the consumable is dragged ONTO the player, not the other way around
@@ -36,7 +30,7 @@ Tasks ##########################################################################
 	- Only allows the user to press new game or exit
 		- on exit, also make sure the save file is reset
 
-- NPC class 
+- NPC class (Andrew)
 	- probably will need a special class for these cards
 
 - When card is defeated, there should be a chance that it can drop stuff (Michael)
