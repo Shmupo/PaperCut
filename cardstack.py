@@ -1,5 +1,5 @@
 import pygame as pg
-from cards import SettingCard
+from cards import NPCCard, SettingCard
 from cards import ConsumableCard
 from cards import EnemyCard
 from cards import PlayerCard
@@ -93,6 +93,11 @@ class CardStack:
         elif type(self.base_card) == EnemyCard:
             if type(self.stack[-1]) == PlayerCard:
                 self.player_fight()
+
+        elif type(self.base_card) == NPCCard:
+            if self.stack[-1] != self.base_card:
+                self.base_card.spawn_card(self.stack[-1])
+                self.remove_bottom()
 
     # player attacks the enemy that is closest to the front every second
     def player_fight(self):

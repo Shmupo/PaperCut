@@ -34,6 +34,7 @@ class Cards:
         self.font = pg.font.Font('fonts/Pixeloid.ttf', 10)
 
 # CREATE CARDS HERE #############################################################################################
+        # PLAYER
         self.card_image = pg.transform.scale(pg.image.load('images/playercard.png'), self.card_size)
         self.player_card = PlayerCard(self.game, self.card_image, 'Player', 
                                 'Your best friend was a magical beetle. Now you wear his skull so that he is always with you. Rest in peace Moe.')
@@ -42,6 +43,34 @@ class Cards:
         self.player_card.rect.x = 150
         self.player_card.rect.y = 350
 
+        # CONSUMABLES
+        self.milk_image = pg.transform.scale(pg.image.load('images/MilkCard.png'), self.card_size)
+        self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
+                                        description='Nothing like having a carton of milk after a hard days work.',
+                                        accepted_cards=[self.player_card], health=1,damage=1)
+
+        self.shoe_image = pg.transform.scale(pg.image.load('images/ShoeCard.png'), self.card_size)
+        self.shoe_card = ConsumableCard(self.game, self.shoe_image, 'Shoe',
+                                        description='Comes with a free snake. He has a hat.',
+                                        accepted_cards=None)
+
+        self.egg_image = pg.transform.scale(pg.image.load('images/EggCard.png'), self.card_size)
+        self.egg_card = ConsumableCard(self.game, self.egg_image, 'Egg',
+                                        description='Don\'t ask where it came from.', health=3,damage=2)
+
+        self.spoon_image = pg.transform.scale(pg.image.load('images/SpoonCard.png'), self.card_size)
+        self.spoon_card = ConsumableCard(self.game, self.spoon_image, 'Spoon',
+                                        description='You ate steak with this once.')
+
+        self.fork_image = pg.transform.scale(pg.image.load('images/ForkCard.png'), self.card_size)
+        self.fork_card = ConsumableCard(self.game, self.fork_image, 'Fork',
+                                        description='For when you want to poke things three times.')
+
+        self.knife_image = pg.transform.scale(pg.image.load('images/KnifeCard.png'), self.card_size)
+        self.knife_card = ConsumableCard(self.game, self.knife_image, 'Knife',
+                                        description='A suitable armament for dinner.')
+
+        # ENEMIES
         self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
                                      description='This goblin has mostly junk in his bag. Minds his own business. Likes other goblins.')
@@ -52,6 +81,23 @@ class Cards:
         self.dwarf_image = pg.transform.scale(pg.image.load('images/DwarfCard.png'), self.card_size)
         self.dwarf_card = EnemyCard(self.game, self.dwarf_image, hp=4, dmg= 2, accepted_cards=[self.player_card], name='Dwarf', description='He works hard. Or is is a she?')
 
+        # NPCS
+        # need something for shoes to drop?
+        # maybe allow access to boss after giving him enough shoes
+        # returns milk card as placeholder
+        self.shoes_image = pg.transform.scale(pg.image.load('images/ShoesCard.png'), self.card_size)
+        self.shoes_card = NPCCard(self.game, self.shoes_image, {self.shoe_card:self.milk_card}, 'Shoes', 'He takes shoes. Can\'t you tell?')
+
+        self.moff_image = pg.transform.scale(pg.image.load('images/MoffCard.png'), self.card_size)
+        self.moff_card = NPCCard(self.game, self.moff_image, {self.spoon_card:self.egg_card, self.spoon_card:self.egg_card, self.knife_card:self.egg_card},
+                                'Moff', 'Desires shiny things. Returns life.')
+
+        # special consumable for MOFF
+        self.lamp_image = pg.transform.scale(pg.image.load('images/LampCard.png'), self.card_size)
+        self.lamp_card = ConsumableCard(self.game, self.lamp_image, 'Lamp',
+                                        description='You are drawn to the flame.', transform_to=self.moff_card)
+
+        # SETTINGS
         self.shack_image = pg.transform.scale(pg.image.load('images/ShackCard.png'), self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
                                       'This is where gobo and his family lives. It ain\'t much, but it\'s home.', duration=3, 
@@ -68,22 +114,6 @@ class Cards:
                                       accepted_cards=[self.player_card], event_cards=[self.dwarf_card], 
                                       event_spawn_chance=[1], max_card_spawns=5)
 
-        self.milk_image = pg.transform.scale(pg.image.load('images/MilkCard.png'), self.card_size)
-        self.milk_card = ConsumableCard(self.game, self.milk_image, 'Milk',
-                                        description='Nothing like having a carton of milk after a hard days work.',
-                                        accepted_cards=[self.player_card], health=1,damage=1)
-
-        # Need to implement NPCs
-        self.shoe_image = pg.transform.scale(pg.image.load('images/ShoeCard.png'), self.card_size)
-        #self.shoe_card = ConsumableCard(self.game, self.shoe_image, 'Shoe',
-        #                                description='Comes with a free snake. He has a hat.',
-        #                                accepted_cards=[self.shoes_card])
-
-        self.egg_image = pg.transform.scale(pg.image.load('images/EggCard.png'), self.card_size)
-        self.egg_card = ConsumableCard(self.game, self.egg_image, 'Egg',
-                                        description='Don\'t ask where it came from.',
-                                        accepted_cards=[self.player_card], health=3,damage=2)
-
         self.house_image = pg.transform.scale(pg.image.load('images/HouseCard.png'), self.card_size)
         self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
                                       duration=3, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_card_spawns=2)
@@ -91,6 +121,7 @@ class Cards:
         self.update_list.append(self.house_card)
         self.house_card.rect.x = 250
         self.house_card.rect.y = 350
+
 #################################################################################################################
 
     # when dragging a card, highlight all other cards that can be interacted with

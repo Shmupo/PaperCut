@@ -97,20 +97,30 @@ class PlayerCard(Card):
             pg.draw.rect(self.screen, (0, 0, 255), (self.rect.x-16, self.rect.y+y_val, 6, 9))
             y_val -= 13
 
-    def display_score(self):
-        score = 0
-        x_pos = 800
-        y_pos = 10
-        comicsans = pg.font.SysFont('comicsans', 30, True)
-        text = comicsans.render('High Score: ' + str(score), 1, (0, 0, 0))
-        self.screen.blit(text, (x_pos, y_pos))
-
-
     def update(self):
         self.draw()
         self.display_health()
         self.display_attack()
-        self.display_score()
+
+
+# The accepted_cards variable is a dict for this class - the value of dict is what the NPC gives for the given key of the dict
+class NPCCard(Card):
+    def __init__(self, game, card_image, accepted_cards, name, description): 
+        super().__init__(game, card_image, name, description, accepted_cards)
+
+    def spawn_card(self, card):
+        if card in self.accepted_cards:
+            copy = self.accepted_cards[card]
+            return_copy = ConsumableCard(self.game, copy.card_image, copy.name, copy.description, copy.accepted_cards, copy.health, copy.damage)
+
+            return_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
+            return_copy.rect.y += 20
+            self.game.cards.update_list.append(return_copy)
+            self.game.cards.all_cards.append(return_copy)
+            self.spawned_cards.append(return_copy)
+
+    def update(self):
+        self.draw()
 
 
 class EnemyCard(Card):
@@ -280,11 +290,12 @@ class SettingCard(Card):
 
 
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0):
+    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0, transform_to = None):
         super().__init__(game, card_image, name, description, accepted_cards)
         #restore 1 heatlh or 1 attack default value for now
         self.health = health
         self.damage = damage
+        self.transform_to = transform_to
 
     # remove this card from play
     def consumed(self):
@@ -292,6 +303,20 @@ class ConsumableCard(Card):
         card_stack.remove_card(self)
         self.game.cards.all_cards.remove(self)
         self.game.cards.update_list.remove(self)
+
+    # delete this card and spawn the transform_to card in its place
+    def transform(self):
+        self.game.cards.all_cards.append(self.transform_to)
+        self.game.cards.update_list.append(self.treanform_to)
+        self.transform_to.rect.x = self.rect.x
+        self.transform_to.rect.y = self.rect.y - 20
+
+        card_stack = self.game.cards.is_in_stack(self)
+        card_stack.remove_card(self)
+        self.game.cards.all_cards.remove(self)
+        self.game.cards.update_list.remove(self)
+            
+
     
     def update(self):
         super().update()
