@@ -124,7 +124,7 @@ class NPCCard(Card):
 
 
 class EnemyCard(Card):
-    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description, loot_drop_chance=None, loot_cards=None): 
+    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description, loot_drop_chance, loot_cards): 
         super().__init__(game, card_image, name, description, accepted_cards)
         self.health = hp
         self.damage = dmg
@@ -171,13 +171,11 @@ class EnemyCard(Card):
     def drop_loot(self):
         card = self.choose_loot()
         if card != None:
-            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
-
+            copy = ConsumableCard(self.game ,card.card_image, card.name, card.description, card.accepted_cards, card.health, card.damage, card.transform_to)
             copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
             copy.rect.y += 20
             self.game.cards.update_list.append(copy)
             self.game.cards.all_cards.append(copy)
-            self.spawned_cards.append(copy)
 
     # when other goblin cards are made, add them to the accepted_cards list
     def update_accepted_cards(self):
@@ -262,11 +260,11 @@ class SettingCard(Card):
         card = self.choose_event()
         copy = None
             
-        if self.max_card_spawns > len(self.spawned_cards):
-            if type(card) == EnemyCard:
-                copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, card.description)
-            elif type(card) == ConsumableCard:
-                copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
+        if type(card) == EnemyCard:
+            copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, 
+                             card.description, card.loot_drop_chance, card.loot_cards)
+        elif type(card) == ConsumableCard:
+            copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
 
         if copy:
             copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
@@ -278,7 +276,7 @@ class SettingCard(Card):
     # keeps track of whether the cards spawned are despawned or not
     def check_spawned_cards(self):
         for card in self.spawned_cards:
-            if card not in self.game.cards.update_list or self.game.cards.is_in_stack(card):
+            if card not in self.game.cards.update_list and not self.game.cards.is_in_stack(card):
                 self.spawned_cards.remove(card)
 
     def update(self):
@@ -286,7 +284,6 @@ class SettingCard(Card):
         self.progress_bar()
         self.check_spawned_cards()
         self.draw()
-        print(len(self.spawned_cards))
 
 
 class ConsumableCard(Card):
@@ -299,6 +296,8 @@ class ConsumableCard(Card):
 
     # remove this card from play
     def consumed(self):
+        if self.transform_to != None:
+            self.transform()
         card_stack = self.game.cards.is_in_stack(self)
         card_stack.remove_card(self)
         self.game.cards.all_cards.remove(self)
@@ -307,16 +306,9 @@ class ConsumableCard(Card):
     # delete this card and spawn the transform_to card in its place
     def transform(self):
         self.game.cards.all_cards.append(self.transform_to)
-        self.game.cards.update_list.append(self.treanform_to)
+        self.game.cards.update_list.append(self.transform_to)
         self.transform_to.rect.x = self.rect.x
         self.transform_to.rect.y = self.rect.y - 20
-
-        card_stack = self.game.cards.is_in_stack(self)
-        card_stack.remove_card(self)
-        self.game.cards.all_cards.remove(self)
-        self.game.cards.update_list.remove(self)
-            
-
     
     def update(self):
         super().update()

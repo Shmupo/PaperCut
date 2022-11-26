@@ -24,9 +24,6 @@ Tasks ##########################################################################
 	- Only allows the user to press new game or exit
 		- on exit, also make sure the save file is reset
 
-- NPC class (Andrew)
-	- probably will need a special class for these cards
-
 - When card is defeated, there should be a chance that it can drop stuff (Michael)
 	- Goblin card has a chance to drop a fork, knife, or spoon
 		- 20% it will drop ONLY 1 card, it will be one of the above
@@ -38,5 +35,10 @@ Tasks ##########################################################################
 		- maybe spawn this card after 5 minutes?
 	- object cards that the player can consume for health and damage points
 	- some sort of 'key' card that 'gobo' drops
+
+- Game functionality (Andrew)
+
+- Flash enemy cards red right before they die
+- Flash consumable cards green right before they are consumed
 
 - Menu button that opens a menu so the player can do 3 things: save, start a new game, or exit without saving
