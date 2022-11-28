@@ -51,24 +51,24 @@ class Cards:
 
         self.shoe_image = pg.transform.scale(pg.image.load('images/ShoeCard.png'), self.card_size)
         self.shoe_card = ConsumableCard(self.game, self.shoe_image, 'Shoe',
-                                        description='Comes with a free snake. He has a hat.',
-                                        accepted_cards=None)
+                                        description='Comes with a free snake. He has a hat.')
 
         self.egg_image = pg.transform.scale(pg.image.load('images/EggCard.png'), self.card_size)
         self.egg_card = ConsumableCard(self.game, self.egg_image, 'Egg',
-                                        description='Don\'t ask where it came from.', health=3,damage=2)
+                                       description='Don\'t ask where it came from.',
+                                       accepted_cards=[self.player_card], health=3,damage=2)
 
         self.spoon_image = pg.transform.scale(pg.image.load('images/SpoonCard.png'), self.card_size)
         self.spoon_card = ConsumableCard(self.game, self.spoon_image, 'Spoon',
-                                        description='You ate steak with this once.')
+                                        'You ate steak with this once.')
 
         self.fork_image = pg.transform.scale(pg.image.load('images/ForkCard.png'), self.card_size)
         self.fork_card = ConsumableCard(self.game, self.fork_image, 'Fork',
-                                        description='For when you want to poke things three times.')
+                                        'For when you want to poke things three times.', )
 
         self.knife_image = pg.transform.scale(pg.image.load('images/KnifeCard.png'), self.card_size)
         self.knife_card = ConsumableCard(self.game, self.knife_image, 'Knife',
-                                        description='A suitable armament for dinner.')
+                                        'A suitable armament for dinner.')
 
         self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
@@ -80,20 +80,22 @@ class Cards:
                                     description='Rock and Stone!', loot_drop_chance=[.6], loot_cards=[self.shoe_card])
 
         self.shoes_image = pg.transform.scale(pg.image.load('images/ShoesCard.png'), self.card_size)
-        self.shoes_card = NPCCard(self.game, self.shoes_image, {self.shoe_card:self.milk_card}, 'Shoes', 'He takes shoes. Can\'t you tell?')
+        self.shoes_card = NPCCard(self.game, self.shoes_image, [self.shoe_card], self.milk_card, 'Shoes', 'He takes shoes. Can\'t you tell?')
 
         self.moff_image = pg.transform.scale(pg.image.load('images/MoffCard.png'), self.card_size)
-        self.moff_card = NPCCard(self.game, self.moff_image, {self.spoon_card:self.egg_card, self.fork_card:self.egg_card, self.knife_card:self.egg_card},
-                                'Moff', 'Desires shiny things.')
+        self.moff_card = NPCCard(self.game, self.moff_image, [self.spoon_card, self.fork_card, self.knife_card],
+                                 self.egg_card, 'Moff', 'Desires shiny things.')
 
         self.lamp_image = pg.transform.scale(pg.image.load('images/LampCard.png'), self.card_size)
         self.lamp_card = ConsumableCard(self.game, self.lamp_image, 'Lamp',
                                         description='You are drawn to the flame.', accepted_cards=[self.player_card],
                                         transform_to=self.moff_card)
 
+        self.moff_card.accepted_cards.append(self.lamp_card)
+
         self.gobo_image = pg.transform.scale(pg.image.load('images/GoboCard.png'), self.card_size)
         self.gobo_card = EnemyCard(self.game, self.gobo_image, hp=2, dmg=3, accepted_cards=[self.player_card], name='Gobo', 
-                                   description='A meaner Goblin. He came prepared.', loot_drop_chance=[.35], 
+                                   description='A meaner Goblin. He came prepared.', loot_drop_chance=[.5], 
                                    loot_cards=[self.lamp_card])
 
         self.shack_image = pg.transform.scale(pg.image.load('images/ShackCard.png'), self.card_size)
@@ -119,6 +121,12 @@ class Cards:
         self.update_list.append(self.house_card)
         self.house_card.rect.x = 250
         self.house_card.rect.y = 350
+
+        # FOR TESTING ###########################################################################################
+        self.all_cards.append(self.lamp_card)
+        self.update_list.append(self.lamp_card)
+        self.update_list.append(self.fork_card)
+        self.all_cards.append(self.fork_card)
 
 #################################################################################################################
 

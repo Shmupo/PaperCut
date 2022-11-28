@@ -80,7 +80,8 @@ class PlayerCard(Card):
             elif self.damage + card.damage <= 1:
                 self.damage = 1
             else: self.damage += card.damage
-            card.consumed()
+            card.consume()
+
     # this is called whenever player health reaches 0
     def die(self):
         pass
@@ -105,21 +106,34 @@ class PlayerCard(Card):
 
 # The accepted_cards variable is a dict for this class - the value of dict is what the NPC gives for the given key of the dict
 class NPCCard(Card):
-    def __init__(self, game, card_image, accepted_cards, name, description): 
+    def __init__(self, game, card_image, accepted_cards, return_card, name, description): 
         super().__init__(game, card_image, name, description, accepted_cards)
+        self.return_card = return_card
 
     def spawn_card(self, card):
         if card in self.accepted_cards:
-            copy = self.accepted_cards[card]
-            return_copy = ConsumableCard(self.game, copy.card_image, copy.name, copy.description, copy.accepted_cards, copy.health, copy.damage)
+            copy = self.return_card
+            return_copy = ConsumableCard(self.game, copy.card_image, copy.name, 
+                                         copy.description, copy.accepted_cards, copy.health, copy.damage, None)
 
             return_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
             return_copy.rect.y += 20
             self.game.cards.update_list.append(return_copy)
             self.game.cards.all_cards.append(return_copy)
-            self.spawned_cards.append(return_copy)
+
+    def update_accepted_cards(self):
+        for card in self.accepted_cards:
+            for element in self.game.cards.update_list:
+                if type(element) == ConsumableCard: 
+                    if card.name == element.name and element not in self.accepted_cards:
+                        self.accepted_cards.append(element)
+
+    def consume_item(self, card):
+        self.spawn_card(card)
+        card.consume()
 
     def update(self):
+        self.update_accepted_cards()
         self.draw()
 
 
@@ -287,15 +301,15 @@ class SettingCard(Card):
 
 
 class ConsumableCard(Card):
-    def __init__(self, game ,card_image, name='Consumable Card', description='This is a consumable card', accepted_cards = None, health = 0, damage = 0, transform_to = None):
+    def __init__(self, game ,card_image, name, description, 
+                 accepted_cards = [], health = 0, damage = 0, transform_to = None):
         super().__init__(game, card_image, name, description, accepted_cards)
-        #restore 1 heatlh or 1 attack default value for now
         self.health = health
         self.damage = damage
         self.transform_to = transform_to
 
     # remove this card from play
-    def consumed(self):
+    def consume(self):
         if self.transform_to != None:
             self.transform()
         card_stack = self.game.cards.is_in_stack(self)
@@ -309,9 +323,17 @@ class ConsumableCard(Card):
         self.game.cards.update_list.append(self.transform_to)
         self.transform_to.rect.x = self.rect.x
         self.transform_to.rect.y = self.rect.y - 20
+
+    # allows same cards to stack
+    def update_accepted_cards(self):
+        for card in self.game.cards.update_list:
+            if type(card) == ConsumableCard and card.name == self.name:
+                if card not in self.accepted_cards:
+                    self.accepted_cards.append(card)
     
     def update(self):
         super().update()
+        self.update_accepted_cards()
         self.draw()
  
         

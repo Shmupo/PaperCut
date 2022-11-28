@@ -87,6 +87,7 @@ class CardStack:
                     if self.start_time == None: self.start_time = time()
                     if time() - self.start_time >= 1:
                         self.stack[-1].consume_item(self.stack[-2])
+                        self.start_time = None
 
         # if stack of enemy cards has player attached, fight
         # create a timer to slowly tick away damage/health
@@ -96,8 +97,10 @@ class CardStack:
 
         elif type(self.base_card) == NPCCard:
             if self.stack[-1] != self.base_card:
-                self.base_card.spawn_card(self.stack[-1])
-                self.remove_bottom()
+                if self.start_time == None: self.start_time = time()
+                if time() - self.start_time >= 1:
+                    self.base_card.consume_item(self.stack[-1])
+                    self.start_time = None
 
     # player attacks the enemy that is closest to the front every second
     def player_fight(self):
@@ -120,10 +123,10 @@ class CardStack:
         if type(self.stack[-1]) == EnemyCard: self.stack[-1].display_stats()
         elif type(self.stack[-2]) == EnemyCard: self.stack[-2].display_stats()
 
-        self.activate_cards()
-
         for card in self.stack:
             card.update()
             
             if card != self.stack[0]:
                 self.align_stack()
+
+        self.activate_cards()
