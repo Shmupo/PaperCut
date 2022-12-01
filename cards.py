@@ -112,7 +112,7 @@ class NPCCard(Card):
 
     def spawn_card(self, card):
         if card in self.accepted_cards:
-            copy = self.return_card[self.accepted_cards.index(card)]
+            copy = self.return_card[card.name]
             return_copy = ConsumableCard(self.game, copy.card_image, copy.name, 
                                          copy.description, copy.accepted_cards, copy.health, copy.damage, None)
 

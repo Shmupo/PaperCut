@@ -61,14 +61,17 @@ class Cards:
         self.spoon_image = pg.transform.scale(pg.image.load('images/SpoonCard.png'), self.card_size)
         self.spoon_card = ConsumableCard(self.game, self.spoon_image, 'Spoon',
                                         'You ate steak with this once.')
+        self.spoon_card.accepted_cards.append(self.spoon_card)
 
         self.fork_image = pg.transform.scale(pg.image.load('images/ForkCard.png'), self.card_size)
         self.fork_card = ConsumableCard(self.game, self.fork_image, 'Fork',
                                         'For when you want to poke things three times.', )
+        self.fork_card.accepted_cards.append(self.fork_card)
 
         self.knife_image = pg.transform.scale(pg.image.load('images/KnifeCard.png'), self.card_size)
         self.knife_card = ConsumableCard(self.game, self.knife_image, 'Knife',
                                         'A suitable armament for dinner.')
+        self.knife_card.accepted_cards.append(self.knife_card)
 
         self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
@@ -82,9 +85,21 @@ class Cards:
         self.shoes_image = pg.transform.scale(pg.image.load('images/ShoesCard.png'), self.card_size)
         self.shoes_card = NPCCard(self.game, self.shoes_image, [self.shoe_card], self.milk_card, 'Shoes', 'He takes shoes. Can\'t you tell?')
 
+        self.mountain_image = pg.transform.scale(pg.image.load('images/MountainCard.png'), self.card_size)
+        self.mountain_card = SettingCard(self.game, self.mountain_image, 'Mountain', 
+                                      'Something grumbly lurks inside.', duration=5, 
+                                      accepted_cards=[self.player_card], event_cards=[self.dwarf_card], 
+                                      event_spawn_chance=[1], max_card_spawns=3)
+
+        self.map_image = pg.transform.scale(pg.image.load('images/MapCard.png'), self.card_size)
+        self.map_card = ConsumableCard(self.game, self.map_image, 'Map',
+                                        description='This is a piece of cardboard...', accepted_cards=[self.player_card],
+                                        transform_to=self.mountain_card)
+
         self.moff_image = pg.transform.scale(pg.image.load('images/MoffCard.png'), self.card_size)
-        self.moff_card = NPCCard(self.game, self.moff_image, [self.spoon_card, self.fork_card, self.knife_card, self.lamp_card],
-                                 [self.egg_card, self.egg_card, self.egg_card, self.map_card], 'Moff', 'Desires shiny things. Give him another lamp.')
+        self.moff_card = NPCCard(self.game, self.moff_image, [self.spoon_card, self.fork_card, self.knife_card],
+                                 {'Spoon':self.egg_card, 'Knife':self.egg_card, 'Fork':self.egg_card, 'Lamp':self.map_card}, 
+                                 'Moff', 'Desires shiny things. Give lamp.')
 
         self.lamp_image = pg.transform.scale(pg.image.load('images/LampCard.png'), self.card_size)
         self.lamp_card = ConsumableCard(self.game, self.lamp_image, 'Lamp',
@@ -108,17 +123,6 @@ class Cards:
         self.shack_card.rect.x = 800
         self.shack_card.rect.y = 350
 
-        self.mountain_image = pg.transform.scale(pg.image.load('images/MountainCard.png'), self.card_size)
-        self.mountain_card = SettingCard(self.game, self.mountain_image, 'Mountain', 
-                                      'Something grumbly lurks inside.', duration=5, 
-                                      accepted_cards=[self.player_card], event_cards=[self.dwarf_card], 
-                                      event_spawn_chance=[1], max_card_spawns=3)
-
-        self.map_image = pg.transform.scale(pg.image.load('images/MapCard.png'), self.card_size)
-        self.map_card = ConsumableCard(self.game, self.map_image, 'Map',
-                                        description='This is a piece of cardboard...', accepted_cards=[self.player_card],
-                                        transform_to=self.mountain_card)
-
         self.house_image = pg.transform.scale(pg.image.load('images/HouseCard.png'), self.card_size)
         self.house_card = SettingCard(self.game, self.house_image, 'House', 'Your mother lives here. Ask her nicely for milk.',
                                       duration=2, accepted_cards=[self.player_card], event_cards=[self.milk_card], event_spawn_chance=[1], max_card_spawns=5)
@@ -127,11 +131,11 @@ class Cards:
         self.house_card.rect.x = 250
         self.house_card.rect.y = 350
 
-        # FOR TESTING ###########################################################################################
-        self.all_cards.append(self.lamp_card)
-        self.update_list.append(self.lamp_card)
-        self.update_list.append(self.fork_card)
+        # Testing
+        self.all_cards.append(self.moff_card)
+        self.update_list.append(self.moff_card)
         self.all_cards.append(self.fork_card)
+        self.update_list.append(self.fork_card)
 
 #################################################################################################################
 
