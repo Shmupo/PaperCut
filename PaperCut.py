@@ -22,6 +22,13 @@ class Game:
 
         self.menu = Menu(self)
 
+        #In game Clock
+        self.clock = pg.time.Clock()        
+        self.frame_count = 0
+        self.frame_rate = 60
+        self.start_time = 90
+        self.font = pg.font.Font('fonts/Pixeloid.ttf', 15)
+
     # this is the video game loop where everything should be updated
     def play(self):
         self.menu.in_menu()
@@ -35,6 +42,18 @@ class Game:
                 # there is an image that is off-screen but is still loaded and
                 # needs to be switched with the current screen using pg.display.update
             self.cards.update()
+            
+            #update clock and display
+            self.total_seconds = self.frame_count // self.frame_rate
+            self.minutes = self.total_seconds // 60
+            self.seconds = self.total_seconds % 60
+
+            self.output_string = "Time: {0:02}:{1:02}".format(self.minutes, self.seconds)
+ 
+            self.text = self.font.render(self.output_string, True, self.settings.font_color)
+            self.screen.blit(self.text, [950,25])
+            self.frame_count += 1
+            self.clock.tick(self.frame_rate)
             
             pg.display.update()
 
