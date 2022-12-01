@@ -23,6 +23,14 @@ class Card:
         self.highlight_rect = pg.Rect(self.rect.x-5, self.rect.y-5, self.rect.width + 10, self.rect.height + 10)
         self.highlight_color = (0, 150, 0)
 
+        self.flash_time_start = None
+        self.is_flashing = False
+        self.flash_alpha = 0
+        self.flash_tick = .05
+        self.flash_rect = pg.Surface((self.rect.width, self.rect.height))
+        self.flash_rect.fill(self.highlight_color)
+        self.flash_rect.set_alpha(0)
+
     # moves the card when the user drags it around
     # this is used by the createcards class
     def drag(self):
@@ -36,13 +44,38 @@ class Card:
             pg.draw.rect(self.screen, self.highlight_color, self.highlight_rect, border_radius=10)
         else: pg.draw.rect(self.screen, color, self.highlight_rect, border_radius=10)
 
+    # colors the entire card
+    def flash_card(self, color):
+        self.flash_rect.fill(color)
+        self.is_flashing = True
+        self.flash_time_start = time.time()
+        self.flash_alpha = 256
+        self.flash_rect.set_alpha(256)
+
+    # reduces the alpha of the flash over time until it reaches 0
+    def reduce_flash(self):
+        if self.is_flashing == True:
+            t_delta = time.time() - self.flash_time_start
+            
+            if t_delta > self.flash_tick:
+                self.flash_time_start += self.flash_tick
+                self.flash_alpha -= 51.2
+                self.flash_rect.set_alpha(self.flash_alpha)
+            
+        else: 
+            self.flashing = False
+
     def __repr__(self):
         return repr(str(type(self)) + ' ' + self.name + str(self.rect.center))
 
     def draw(self):
         self.screen.blit(self.card_image, (self.rect.x, self.rect.y))
 
+        if self.is_flashing:
+            self.screen.blit(self.flash_rect, (self.rect.x, self.rect.y))
+
     def update(self):
+        self.reduce_flash()
         self.draw()
         
 
@@ -65,6 +98,8 @@ class PlayerCard(Card):
             self.health = 0
             self.die()
 
+        self.flash_card((255, 0, 0))
+
     # keeps health/damage stats within max boundaries
     def consume_item(self, card):
         if type(card) == ConsumableCard:
@@ -81,6 +116,8 @@ class PlayerCard(Card):
                 self.damage = 1
             else: self.damage += card.damage
             card.consume()
+
+            self.flash_card((0, 0, 255))
 
     # this is called whenever player health reaches 0
     def die(self):
@@ -99,7 +136,7 @@ class PlayerCard(Card):
             y_val -= 13
 
     def update(self):
-        self.draw()
+        super().update()
         self.display_health()
         self.display_attack()
 
@@ -121,6 +158,8 @@ class NPCCard(Card):
             self.game.cards.update_list.append(return_copy)
             self.game.cards.all_cards.append(return_copy)
 
+            self.flash_card((255, 255, 255))
+
     def update_accepted_cards(self):
         for card in self.accepted_cards:
             for element in self.game.cards.update_list:
@@ -133,8 +172,8 @@ class NPCCard(Card):
         card.consume()
 
     def update(self):
+        super().update()
         self.update_accepted_cards()
-        self.draw()
 
 
 class EnemyCard(Card):
@@ -151,6 +190,8 @@ class EnemyCard(Card):
         if self.health <= 0:
             self.health = 0
             self.die()
+        else:
+            self.flash_card((255, 0, 0))
 
     def display_stats(self):
         y_val = 118
@@ -199,8 +240,8 @@ class EnemyCard(Card):
                     self.accepted_cards.append(card)
 
     def update(self):
+        super().update()
         self.update_accepted_cards()
-        self.draw()
 
 
 # event_card param : list of cards that are to be spawned upon trigger_event()
@@ -287,6 +328,8 @@ class SettingCard(Card):
             self.game.cards.all_cards.append(copy)
             self.spawned_cards.append(copy)
 
+        self.flash_card((255, 255, 255))
+
     # keeps track of whether the cards spawned are despawned or not
     def check_spawned_cards(self):
         for card in self.spawned_cards:
@@ -297,7 +340,6 @@ class SettingCard(Card):
         super().update()
         self.progress_bar()
         self.check_spawned_cards()
-        self.draw()
 
 
 class ConsumableCard(Card):
@@ -334,6 +376,5 @@ class ConsumableCard(Card):
     def update(self):
         super().update()
         self.update_accepted_cards()
-        self.draw()
  
         

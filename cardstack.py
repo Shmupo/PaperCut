@@ -116,10 +116,6 @@ class CardStack:
         pass
 
     def update(self):
-        # for testing
-        pg.draw.rect(self.cards.game.screen, (255, 255, 255), self.rect)
-        # END
-
         if type(self.stack[-1]) == EnemyCard: self.stack[-1].display_stats()
         elif type(self.stack[-2]) == EnemyCard: self.stack[-2].display_stats()
 
