@@ -73,6 +73,11 @@ class Cards:
                                         'A suitable armament for dinner.')
         self.knife_card.accepted_cards.append(self.knife_card)
 
+        self.serpent_image = pg.transform.scale(pg.image.load('images/SerpentCard.png'), self.card_size)
+        self.serpent_card = EnemyCard(self.game, self.serpent_image, hp=10, dmg=4, accepted_cards=[self.player_card], name='Serpent', 
+                                   description='That is one big snake...', loot_drop_chance=[.5], 
+                                   loot_cards=[])
+
         self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
                                      description='Goblin has junk. Goblin minds own business.', loot_drop_chance=[.3, .3, .3], 
@@ -246,6 +251,7 @@ class Cards:
         #         print("===========")
         #         self.all_cards.remove(card)
         #         self.update_list.remove(card)
+
                 
         for card in self.update_list:
             card.update()

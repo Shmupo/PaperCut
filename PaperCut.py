@@ -41,7 +41,6 @@ class Game:
             self.screen.blit(self.background, (0, 0))
                 # there is an image that is off-screen but is still loaded and
                 # needs to be switched with the current screen using pg.display.update
-            self.cards.update()
             
             #update clock and display
             self.total_seconds = self.frame_count // self.frame_rate
@@ -54,6 +53,14 @@ class Game:
             self.screen.blit(self.text, [950,25])
             self.frame_count += 1
             self.clock.tick(self.frame_rate)
+
+            if self.minutes == 1 and self.seconds == 0 :
+                self.cards.update_list.append(self.cards.serpent_card)
+                self.cards.all_cards.append(self.cards.serpent_card)
+                self.cards.serpent_card.rect.x = 500
+                self.cards.serpent_card.rect.y = 350
+            
+            self.cards.update()
             
             pg.display.update()
 
