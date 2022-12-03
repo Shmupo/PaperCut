@@ -37,7 +37,7 @@ class Cards:
         # PLAYER
         self.card_image = pg.transform.scale(pg.image.load('images/playercard.png'), self.card_size)
         self.player_card = PlayerCard(self.game, self.card_image, 'Player', 
-                                'Your best friend was a magical beetle. Now you wear his skull so that he is always with you. Rest in peace Moe.')
+                                'You bear the skull of a magical beetle.')
         self.update_list.append(self.player_card)
         self.all_cards.append(self.player_card)
         self.player_card.rect.x = 150
