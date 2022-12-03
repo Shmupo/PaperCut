@@ -152,7 +152,7 @@ class NPCCard(Card):
         if card in self.accepted_cards:
             copy = self.return_card[card.name]
             return_copy = ConsumableCard(self.game, copy.card_image, copy.name, 
-                                         copy.description, copy.accepted_cards, copy.health, copy.damage, None)
+                                         copy.description, copy.accepted_cards, copy.health, copy.damage, copy.transform_to)
 
             return_copy.rect.center = (self.rect.x + self.rect.width / 2, self.rect.y + 190)
             return_copy.rect.y += 20
