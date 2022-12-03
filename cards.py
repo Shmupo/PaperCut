@@ -119,6 +119,13 @@ class PlayerCard(Card):
 
             self.flash_card((0, 0, 255))
 
+    # display score function
+    def display_score(self):
+        score = 0
+        comicsans = pg.font.SysFont('comicsans', 30, True)
+        text = comicsans.render('High Score: ' + str(score), True, (0, 0, 0 ))
+        self. screen.blit(text, (20, 10))
+
     # this is called whenever player health reaches 0
     def die(self):
         pass
@@ -139,6 +146,7 @@ class PlayerCard(Card):
         super().update()
         self.display_health()
         self.display_attack()
+        self.display_score()
 
 
 # The accepted_cards variable is a dict for this class - the value of dict is what the NPC gives for the given key of the dict
