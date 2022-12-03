@@ -119,13 +119,6 @@ class PlayerCard(Card):
 
             self.flash_card((0, 0, 255))
 
-    # display score function
-    def display_score(self):
-        score = 0
-        comicsans = pg.font.SysFont('comicsans', 30, True)
-        text = comicsans.render('High Score: ' + str(score), True, (0, 0, 0 ))
-        self. screen.blit(text, (20, 10))
-
     # this is called whenever player health reaches 0
     def die(self):
         pass
@@ -146,7 +139,6 @@ class PlayerCard(Card):
         super().update()
         self.display_health()
         self.display_attack()
-        self.display_score()
 
 
 # The accepted_cards variable is a dict for this class - the value of dict is what the NPC gives for the given key of the dict
@@ -185,13 +177,14 @@ class NPCCard(Card):
 
 
 class EnemyCard(Card):
-    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description, loot_drop_chance, loot_cards): 
+    def __init__(self, game, card_image, hp, dmg, accepted_cards, name, description, loot_drop_chance, loot_cards, points): 
         super().__init__(game, card_image, name, description, accepted_cards)
         self.health = hp
         self.damage = dmg
         self.highlight_color = (150, 0, 0)
         self.loot_drop_chance = loot_drop_chance
         self.loot_cards = loot_cards
+        self.points = points
 
     def take_damage(self, damage):
         self.health -= damage
@@ -219,6 +212,7 @@ class EnemyCard(Card):
         card_stack.remove_card(self)
         self.game.cards.all_cards.remove(self)
         self.game.cards.update_list.remove(self)
+        self.game.scoreboard.update_points(self.points)
 
     # chooses a loot card to drop based on probabilities
     # return None when no card is chosen
@@ -325,7 +319,7 @@ class SettingCard(Card):
             
         if type(card) == EnemyCard:
             copy = EnemyCard(self.game, card.card_image, card.health, card.damage, card.accepted_cards, card.name, 
-                             card.description, card.loot_drop_chance, card.loot_cards)
+                             card.description, card.loot_drop_chance, card.loot_cards, card.points)
         elif type(card) == ConsumableCard:
             copy = ConsumableCard(self.game, card.card_image, card.name, card.description, card.accepted_cards,card.health,card.damage)
 

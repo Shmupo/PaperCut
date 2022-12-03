@@ -4,6 +4,7 @@ import pygame as pg
 from settings import Settings
 from managecards import Cards
 from menu import Menu
+from score import Score
 
 # The entirety of the game will mostly run here
 class Game:
@@ -22,6 +23,8 @@ class Game:
 
         self.menu = Menu(self)
 
+        self.scoreboard = None
+
         #In game Clock
         self.clock = pg.time.Clock()        
         self.frame_count = 0
@@ -32,6 +35,8 @@ class Game:
     # this is the video game loop where everything should be updated
     def play(self):
         self.menu.in_menu()
+
+        self.scoreboard = Score(self)
 
         while True:
             for event in pg.event.get():
@@ -61,6 +66,7 @@ class Game:
                 self.cards.serpent_card.rect.y = 350
             
             self.cards.update()
+            self.scoreboard.update()
             
             pg.display.update()
 

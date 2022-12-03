@@ -76,16 +76,16 @@ class Cards:
         self.serpent_image = pg.transform.scale(pg.image.load('images/SerpentCard.png'), self.card_size)
         self.serpent_card = EnemyCard(self.game, self.serpent_image, hp=10, dmg=4, accepted_cards=[self.player_card], name='Serpent', 
                                    description='That is one big snake...', loot_drop_chance=[.5], 
-                                   loot_cards=[])
+                                   loot_cards=[], points=100)
 
         self.goblin_image = pg.transform.scale(pg.image.load('images/GoblinCard.png'), self.card_size)
         self.goblin_card = EnemyCard(self.game, self.goblin_image, hp=2, dmg=2, accepted_cards=[self.player_card], name='Goblin', 
                                      description='Goblin has junk. Goblin minds own business.', loot_drop_chance=[.3, .3, .3], 
-                                     loot_cards=[self.spoon_card, self.fork_card, self.knife_card])        
+                                     loot_cards=[self.spoon_card, self.fork_card, self.knife_card], points = 10)        
 
         self.dwarf_image = pg.transform.scale(pg.image.load('images/DwarfCard.png'), self.card_size)
         self.dwarf_card = EnemyCard(self.game, self.dwarf_image, hp=4, dmg= 2, accepted_cards=[self.player_card], name='Dwarf', 
-                                    description='Rock and Stone!', loot_drop_chance=[.5], loot_cards=[self.shoe_card])
+                                    description='Rock and Stone!', loot_drop_chance=[.5], loot_cards=[self.shoe_card], points = 40)
 
         self.shoes_image = pg.transform.scale(pg.image.load('images/ShoesCard.png'), self.card_size)
         self.shoes_card = NPCCard(self.game, self.shoes_image, [self.shoe_card], self.milk_card, 'Shoes', 'He takes shoes. Can\'t you tell?')
@@ -116,7 +116,7 @@ class Cards:
         self.gobo_image = pg.transform.scale(pg.image.load('images/GoboCard.png'), self.card_size)
         self.gobo_card = EnemyCard(self.game, self.gobo_image, hp=2, dmg=3, accepted_cards=[self.player_card], name='Gobo', 
                                    description='A meaner Goblin. He came prepared.', loot_drop_chance=[.5], 
-                                   loot_cards=[self.lamp_card])
+                                   loot_cards=[self.lamp_card], points=20)
 
         self.shack_image = pg.transform.scale(pg.image.load('images/ShackCard.png'), self.card_size)
         self.shack_card = SettingCard(self.game, self.shack_image, 'Shack', 
@@ -136,11 +136,6 @@ class Cards:
         self.house_card.rect.x = 250
         self.house_card.rect.y = 350
 
-        # Testing
-        self.all_cards.append(self.moff_card)
-        self.update_list.append(self.moff_card)
-        self.all_cards.append(self.fork_card)
-        self.update_list.append(self.fork_card)
 
 #################################################################################################################
 
