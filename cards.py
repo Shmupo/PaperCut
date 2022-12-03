@@ -121,7 +121,8 @@ class PlayerCard(Card):
 
     # this is called whenever player health reaches 0
     def die(self):
-        pass
+        pg.quit()
+        quit()
 
     def display_health(self):
         y_val = 118

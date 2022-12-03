@@ -59,13 +59,8 @@ class Menu():
                 x, y = pg.mouse.get_pos()
                 if self.ng_rect.collidepoint(x, y):
                    self.new_game()
-                elif self.cont_rect.collidepoint(x, y):
-                    self.load_save()
                 elif self.exit_rect.collidepoint(x, y):
                     self.exit_game()
-
-    def load_save(self):
-        self.running = False
 
     def new_game(self):
         self.running = False
@@ -84,7 +79,6 @@ class Menu():
     
     def draw(self):
         self.screen.blit(self.ng_image, (self.ng_rect.x, self.ng_rect.y))
-        self.screen.blit(self.cont_image, (self.cont_rect.x, self.cont_rect.y))
         self.screen.blit(self.exit_image, (self.exit_rect.x, self.exit_rect.y))
         self.screen.blit(self.text, self.textRect)
         pg.display.update()
@@ -103,16 +97,6 @@ class Menu():
                     pg.mixer.music.play()
                 elif self.exit_rect.collidepoint(x, y):
                     self.exit_game()
-                
-
-
-
-    def load_save(self):
-        click = pg.mixer.music.load("sounds/click.wav")
-        pg.mixer.music.set_volume(0.3)
-        pg.mixer.music.play()
-        pg.time.delay(500)
-        self.running = False
 
     def new_game(self):
         self.running = False
@@ -120,7 +104,6 @@ class Menu():
         pg.mixer.music.set_volume(0.3)
         pg.mixer.music.play()
         pg.time.delay(500)
-
 
     def exit_game(self):
         click = pg.mixer.music.load("sounds/click.wav")
@@ -139,7 +122,6 @@ class Menu():
     
     def draw(self):
         self.screen.blit(self.ng_image, (self.ng_rect.x, self.ng_rect.y))
-        self.screen.blit(self.cont_image, (self.cont_rect.x, self.cont_rect.y))
         self.screen.blit(self.exit_image, (self.exit_rect.x, self.exit_rect.y))
         self.screen.blit(self.text, self.textRect)
         pg.display.update()

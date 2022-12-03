@@ -59,7 +59,7 @@ class Game:
             self.frame_count += 1
             self.clock.tick(self.frame_rate)
 
-            if self.minutes == 1 and self.seconds == 0 :
+            if self.minutes == 2 and self.seconds == 0 :
                 self.cards.update_list.append(self.cards.serpent_card)
                 self.cards.all_cards.append(self.cards.serpent_card)
                 self.cards.serpent_card.rect.x = 500
